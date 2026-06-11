@@ -69,9 +69,11 @@ export default function StudentDashboard() {
   const availablePlans = plansData?.data?.plans || [];
   
   const allowedTestIds = activePlan?.availableTests || [];
+  
   const tests = (testsData?.data?.tests || []).filter((test: any) => 
-    allowedTestIds.some((tId: any) => (tId._id || tId).toString() === test._id.toString())
+    allowedTestIds.some((tId: any) => (tId._id || tId).toString() == test._id.toString())
   );
+  console.log(testsData?.data.tests);
 
   const attempts = attemptsData?.data?.attempts || [];
   const stats = attemptsData?.data?.stats || { avgScore: 0, avgAccuracy: 0, totalCompleted: 0 };

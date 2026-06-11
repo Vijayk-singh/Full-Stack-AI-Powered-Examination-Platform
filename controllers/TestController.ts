@@ -87,10 +87,17 @@ export class TestController {
       if (subjectId) filter.subjectId = subjectId;
       if (testType) filter.testType = testType.toUpperCase();
 
-      // Students should only see published tests (or instant/practice)
+      // Students should only see published tests included in their subscription
       if (user.role === 'STUDENT') {
         filter.status = 'PUBLISHED';
-        filter.isPublic = { $ne: false };
+        const { subscriptionService } = await import('../services/SubscriptionService');
+        const activeSub = await subscriptionService.getActiveSubscription(user.userId);
+        if (activeSub && activeSub.planId) {
+          const plan = activeSub.planId as any;
+          filter._id = { $in: plan.availableTests || [] };
+        } else {
+          filter.isPublic = { $ne: false };
+        }
       } else {
         // Teachers / Admins can filter by status
         const status = searchParams.get('status');
