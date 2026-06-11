@@ -1,5 +1,7 @@
 import Question, { IQuestion } from '../models/Question';
 import { connectToDatabase } from '../lib/db';
+import '../models/Subject';
+import '../models/Topic';
 
 export class QuestionRepository {
   async connect() {

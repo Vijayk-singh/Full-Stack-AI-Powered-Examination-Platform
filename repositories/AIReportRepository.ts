@@ -1,5 +1,7 @@
 import AIReport, { IAIReport } from '../models/AIReport';
 import { connectToDatabase } from '../lib/db';
+import '../models/User';
+import '../models/Test';
 
 export class AIReportRepository {
   async connect() {

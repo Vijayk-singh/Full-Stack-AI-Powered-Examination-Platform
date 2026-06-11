@@ -1,5 +1,9 @@
 import Test, { ITest } from '../models/Test';
 import { connectToDatabase } from '../lib/db';
+import '../models/Subject';
+import '../models/Question';
+import '../models/Topic';
+import '../models/User';
 
 export class TestRepository {
   async connect() {

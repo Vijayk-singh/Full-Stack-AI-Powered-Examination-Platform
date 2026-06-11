@@ -1,5 +1,7 @@
 import UserSubscription, { IUserSubscription } from '../models/UserSubscription';
 import { connectToDatabase } from '../lib/db';
+import '../models/User';
+import '../models/SubscriptionPlan';
 
 export class UserSubscriptionRepository {
   async connect() {

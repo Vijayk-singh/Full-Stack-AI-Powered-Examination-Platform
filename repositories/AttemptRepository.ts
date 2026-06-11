@@ -1,6 +1,9 @@
 import Attempt, { IAttempt } from '../models/Attempt';
 import { connectToDatabase } from '../lib/db';
 import mongoose from 'mongoose';
+import '../models/User';
+import '../models/Test';
+import '../models/Subject';
 
 export class AttemptRepository {
   async connect() {

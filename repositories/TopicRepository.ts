@@ -1,5 +1,6 @@
 import Topic, { ITopic } from '../models/Topic';
 import { connectToDatabase } from '../lib/db';
+import '../models/Subject';
 
 export class TopicRepository {
   async connect() {

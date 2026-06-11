@@ -1,5 +1,6 @@
 import SubscriptionPlan, { ISubscriptionPlan } from '../models/SubscriptionPlan';
 import { connectToDatabase } from '../lib/db';
+import '../models/Test';
 
 export class SubscriptionPlanRepository {
   async connect() {
