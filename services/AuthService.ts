@@ -135,6 +135,40 @@ export class AuthService {
 
     return { success: true };
   }
+
+  async updateUserProfile(
+    userId: string,
+    updateData: { name?: string; email?: string; avatar?: string; password?: string }
+  ): Promise<Omit<IUser, 'password'>> {
+    const user = await userRepository.findById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const updates: any = {};
+    if (updateData.name !== undefined) updates.name = updateData.name;
+    if (updateData.email !== undefined) {
+      const existing = await userRepository.findByEmail(updateData.email);
+      if (existing && existing._id.toString() !== userId) {
+        throw new Error('Email is already registered by another account');
+      }
+      updates.email = updateData.email;
+    }
+    if (updateData.avatar !== undefined) updates.avatar = updateData.avatar;
+    if (updateData.password) {
+      const salt = await bcrypt.genSalt(10);
+      updates.password = await bcrypt.hash(updateData.password, salt);
+    }
+
+    const updatedUser = await userRepository.update(userId, updates);
+    if (!updatedUser) {
+      throw new Error('Failed to update profile');
+    }
+
+    const userObj = updatedUser.toObject();
+    delete userObj.password;
+    return userObj;
+  }
 }
 
 export const authService = new AuthService();

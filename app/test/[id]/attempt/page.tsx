@@ -347,7 +347,10 @@ export default function AttemptPage({
                 <div className="text-slate-800 text-sm font-medium leading-relaxed bg-[#f8f9fa] p-4 rounded border border-slate-200">
                   {activeQuestion.questionText}
                 </div>
-
+                 // add question img here from imgUrl
+                  <div className="text-slate-800 text-sm font-medium leading-relaxed bg-[#f8f9fa] p-4 rounded border border-slate-200">
+                  {activeQuestion.imageUrl}
+                </div>
                 {/* Answer Input Areas */}
                 <div className="flex flex-col gap-3 max-w-2xl">
                   {(activeQuestion.type === 'MCQ' || activeQuestion.type === 'TRUE_FALSE') && (

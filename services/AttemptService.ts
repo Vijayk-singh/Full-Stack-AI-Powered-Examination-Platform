@@ -2,6 +2,7 @@ import { attemptRepository } from '../repositories/AttemptRepository';
 import { testRepository } from '../repositories/TestRepository';
 import { questionRepository } from '../repositories/QuestionRepository';
 import { aiService } from './AIService';
+import { subscriptionService } from './SubscriptionService';
 import { IAttempt } from '../models/Attempt';
 import { IQuestion } from '../models/Question';
 import mongoose from 'mongoose';
@@ -15,6 +16,12 @@ export class AttemptService {
 
     if (test.status !== 'PUBLISHED') {
       throw new Error('This test is not available for attempts');
+    }
+
+    // Check subscription access for students
+    const accessCheck = await subscriptionService.checkUserAccessToTest(studentId, testId);
+    if (!accessCheck.hasAccess) {
+      throw new Error(accessCheck.reason);
     }
 
     // Check for existing incomplete attempt to resume

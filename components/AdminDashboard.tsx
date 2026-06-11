@@ -3,17 +3,133 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../lib/store/auth';
-import { Shield, Users, BookOpen, Cpu, ShieldCheck, UserMinus, Plus, Server, Activity, Loader } from 'lucide-react';
+import { Shield, Users, BookOpen, Cpu, ShieldCheck, UserMinus, Plus, Server, Activity, Loader, CreditCard, Calendar } from 'lucide-react';
 
 export default function AdminDashboard() {
   const token = useAuthStore((state) => state.accessToken);
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<'stats' | 'users' | 'curriculum' | 'ai'>('stats');
+  const [activeTab, setActiveTab] = useState<'stats' | 'users' | 'curriculum' | 'ai' | 'subscriptions'>('stats');
 
   // Form states for creating subjects
   const [newSubName, setNewSubName] = useState('');
   const [newSubDesc, setNewSubDesc] = useState('');
   const [subjectLoading, setSubjectLoading] = useState(false);
+
+  // Form states for creating subscription plan
+  const [newPlanName, setNewPlanName] = useState('');
+  const [newPlanDesc, setNewPlanDesc] = useState('');
+  const [newPlanPrice, setNewPlanPrice] = useState(0);
+  const [newPlanDuration, setNewPlanDuration] = useState(30);
+  const [newPlanExpiryDate, setNewPlanExpiryDate] = useState('');
+  const [newPlanAttempts, setNewPlanAttempts] = useState(1);
+  const [newPlanTests, setNewPlanTests] = useState<string[]>([]);
+  const [planLoading, setPlanLoading] = useState(false);
+
+  // Fetch tests list for subscriptions selection
+  const { data: testsData } = useQuery({
+    queryKey: ['adminTestsList'],
+    queryFn: async () => {
+      const res = await fetch('/api/tests', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Failed to fetch tests');
+      return res.json();
+    },
+    enabled: !!token,
+  });
+  const allTests = testsData?.data?.tests || [];
+
+  // Fetch subscription plans
+  const { data: plansData, refetch: refetchPlans } = useQuery({
+    queryKey: ['adminPlansList'],
+    queryFn: async () => {
+      const res = await fetch('/api/subscriptions/plans', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Failed to fetch plans');
+      return res.json();
+    },
+    enabled: !!token,
+  });
+  const plans = plansData?.data?.plans || [];
+
+  // Fetch all user subscriptions
+  const { data: userSubsData, refetch: refetchUserSubs } = useQuery({
+    queryKey: ['adminUserSubsList'],
+    queryFn: async () => {
+      const res = await fetch('/api/subscriptions', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Failed to fetch user subscriptions');
+      return res.json();
+    },
+    enabled: !!token,
+  });
+  const userSubs = userSubsData?.data?.subscriptions || [];
+
+  const handleCreatePlan = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPlanLoading(true);
+    try {
+      const body: any = {
+        name: newPlanName,
+        description: newPlanDesc,
+        price: newPlanPrice,
+        attemptsPerTest: newPlanAttempts,
+        availableTests: newPlanTests,
+      };
+      if (newPlanExpiryDate) {
+        body.expiryDate = new Date(newPlanExpiryDate).toISOString();
+      } else {
+        body.durationDays = newPlanDuration;
+      }
+
+      const res = await fetch('/api/subscriptions/plans', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Failed to create plan');
+      }
+
+      alert(`Subscription plan "${newPlanName}" created successfully!`);
+      setNewPlanName('');
+      setNewPlanDesc('');
+      setNewPlanPrice(0);
+      setNewPlanDuration(30);
+      setNewPlanExpiryDate('');
+      setNewPlanAttempts(1);
+      setNewPlanTests([]);
+      refetchPlans();
+      refetchUserSubs();
+    } catch (e: any) {
+      alert(e.message || 'Error creating subscription plan');
+    } finally {
+      setPlanLoading(false);
+    }
+  };
+
+  const handleDeletePlan = async (planId: string) => {
+    if (!confirm('Are you sure you want to delete this subscription plan?')) return;
+    try {
+      const res = await fetch(`/api/subscriptions/plans/${planId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Failed to delete plan');
+      alert('Subscription plan deleted successfully');
+      refetchPlans();
+      refetchUserSubs();
+    } catch (e: any) {
+      alert(e.message || 'Error deleting plan');
+    }
+  };
 
   // Fetch subjects list
   const { data: subjectsData } = useQuery({
@@ -124,6 +240,14 @@ export default function AdminDashboard() {
           }`}
         >
           AI Usage Analytics
+        </button>
+        <button
+          onClick={() => setActiveTab('subscriptions')}
+          className={`px-4 py-2.5 font-semibold text-sm transition cursor-pointer border-b-2 whitespace-nowrap ${
+            activeTab === 'subscriptions' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-white'
+          }`}
+        >
+          Subscriptions
         </button>
       </div>
 
@@ -365,6 +489,248 @@ export default function AdminDashboard() {
               <span className="text-xs text-slate-500 block">Monthly Token Budget</span>
               <span className="text-2xl font-bold text-emerald-400 block mt-1">1.4% Used</span>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 5: SUBSCRIPTIONS */}
+      {activeTab === 'subscriptions' && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Columns: Plans list & Enrollments list */}
+          <div className="lg:col-span-2 flex flex-col gap-8 animate-fade-in">
+            {/* Subscription Plans */}
+            <div className="glass-panel p-6 rounded-2xl border border-slate-900 flex flex-col gap-4">
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <CreditCard className="w-5 h-5 text-indigo-400" />
+                Dynamic Subscription Plans
+              </h2>
+              <div className="flex flex-col gap-3">
+                {plans.map((plan: any) => (
+                  <div key={plan._id} className="p-5 bg-slate-900/60 rounded-xl border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-slate-700/80 transition">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-semibold text-white text-lg">{plan.name}</h4>
+                        <span className="px-2.5 py-0.5 bg-emerald-500/10 text-emerald-400 rounded-lg text-xs font-bold">
+                          ${plan.price}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-400 mt-1">{plan.description || 'No description added'}</p>
+                      
+                      <div className="flex flex-wrap gap-4 mt-3 text-xs text-slate-500">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="w-3.5 h-3.5" /> 
+                          {plan.expiryDate 
+                            ? `Expires: ${new Date(plan.expiryDate).toLocaleDateString()}`
+                            : `Duration: ${plan.durationDays} days`
+                          }
+                        </span>
+                        <span>Attempts per Test: <strong className="text-slate-300">{plan.attemptsPerTest}</strong></span>
+                        <span>Tests included: <strong className="text-slate-300">{plan.availableTests?.length || 0}</strong></span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDeletePlan(plan._id)}
+                      className="px-3 py-1.5 bg-red-600/10 hover:bg-red-600/25 border border-red-500/20 text-red-400 rounded-lg text-xs font-semibold cursor-pointer transition w-full sm:w-auto text-center"
+                    >
+                      Delete Plan
+                    </button>
+                  </div>
+                ))}
+                {plans.length === 0 && (
+                  <div className="text-center py-8 text-slate-500">No subscription plans created yet. Use the form on the right to create one.</div>
+                )}
+              </div>
+            </div>
+
+            {/* Student Subscriptions List */}
+            <div className="glass-panel p-6 rounded-2xl border border-slate-900">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <Users className="w-5 h-5 text-indigo-400" />
+                Active Student Subscriptions
+              </h2>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm text-slate-400 border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-900 text-slate-500 font-bold">
+                      <th className="py-3 px-4">Student</th>
+                      <th className="py-3 px-4">Plan Name</th>
+                      <th className="py-3 px-4">Start Date</th>
+                      <th className="py-3 px-4">Expiry Date</th>
+                      <th className="py-3 px-4">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {userSubs.map((sub: any) => (
+                      <tr key={sub._id} className="border-b border-slate-900 hover:bg-slate-900/20">
+                        <td className="py-4 px-4 font-semibold text-white">
+                          <div>
+                            <div>{sub.userId?.name || 'Unknown Student'}</div>
+                            <div className="text-[10px] text-slate-500 font-normal">{sub.userId?.email || ''}</div>
+                          </div>
+                        </td>
+                        <td className="py-4 px-4 text-slate-300 font-medium">{sub.planId?.name || 'Deleted Plan'}</td>
+                        <td className="py-4 px-4 text-xs">{new Date(sub.startDate).toLocaleDateString()}</td>
+                        <td className="py-4 px-4 text-xs">{new Date(sub.endDate).toLocaleDateString()}</td>
+                        <td className="py-4 px-4">
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                            sub.status === 'ACTIVE' 
+                              ? 'bg-emerald-500/10 text-emerald-400' 
+                              : sub.status === 'EXPIRED'
+                              ? 'bg-amber-500/10 text-amber-400'
+                              : 'bg-slate-800 text-slate-400'
+                          }`}>
+                            {sub.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                    {userSubs.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="py-8 text-center text-slate-500">No active student subscriptions found.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Create form */}
+          <div className="glass-panel p-6 rounded-2xl border border-slate-900 flex flex-col gap-5">
+            <div>
+              <h3 className="text-lg font-bold text-white">Create Subscription Plan</h3>
+              <p className="text-xs text-slate-500 mt-1">Configure pricing, test accessibility, attempts, and duration.</p>
+            </div>
+            
+            <form onSubmit={handleCreatePlan} className="flex flex-col gap-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Plan Name</label>
+                <input
+                  type="text"
+                  required
+                  value={newPlanName}
+                  onChange={(e) => setNewPlanName(e.target.value)}
+                  placeholder="e.g. Premium Access Pack"
+                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Description</label>
+                <textarea
+                  rows={2}
+                  value={newPlanDesc}
+                  onChange={(e) => setNewPlanDesc(e.target.value)}
+                  placeholder="What is included in this subscription plan..."
+                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Price ($)</label>
+                  <input
+                    type="number"
+                    min={0}
+                    required
+                    value={newPlanPrice}
+                    onChange={(e) => setNewPlanPrice(parseFloat(e.target.value) || 0)}
+                    className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Attempts per Test</label>
+                  <input
+                    type="number"
+                    min={1}
+                    required
+                    value={newPlanAttempts}
+                    onChange={(e) => setNewPlanAttempts(parseInt(e.target.value) || 1)}
+                    className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Expiry Type</label>
+                <div className="grid grid-cols-2 gap-4 mb-2 text-xs">
+                  <label className="flex items-center gap-2 text-slate-300">
+                    <input
+                      type="radio"
+                      name="expiryType"
+                      checked={!newPlanExpiryDate}
+                      onChange={() => setNewPlanExpiryDate('')}
+                      className="accent-indigo-500"
+                    />
+                    Duration (Days)
+                  </label>
+                  <label className="flex items-center gap-2 text-slate-300">
+                    <input
+                      type="radio"
+                      name="expiryType"
+                      checked={!!newPlanExpiryDate}
+                      onChange={() => setNewPlanExpiryDate(new Date().toISOString().split('T')[0])}
+                      className="accent-indigo-500"
+                    />
+                    Fixed Expiry Date
+                  </label>
+                </div>
+
+                {!newPlanExpiryDate ? (
+                  <input
+                    type="number"
+                    min={1}
+                    required
+                    value={newPlanDuration}
+                    onChange={(e) => setNewPlanDuration(parseInt(e.target.value) || 30)}
+                    placeholder="e.g. 30 days"
+                    className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                  />
+                ) : (
+                  <input
+                    type="date"
+                    required
+                    value={newPlanExpiryDate}
+                    onChange={(e) => setNewPlanExpiryDate(e.target.value)}
+                    className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                  />
+                )}
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Included Tests</label>
+                <div className="max-h-40 overflow-y-auto border border-slate-850 rounded-xl p-3 bg-slate-950/40 flex flex-col gap-2">
+                  {allTests.map((t: any) => (
+                    <label key={t._id} className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={newPlanTests.includes(t._id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setNewPlanTests([...newPlanTests, t._id]);
+                          } else {
+                            setNewPlanTests(newPlanTests.filter(id => id !== t._id));
+                          }
+                        }}
+                        className="accent-indigo-500 rounded border-slate-850"
+                      />
+                      <span>{t.title}</span>
+                    </label>
+                  ))}
+                  {allTests.length === 0 && (
+                    <span className="text-slate-600 text-xs italic">No tests available. Create a test first.</span>
+                  )}
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={planLoading}
+                className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition disabled:opacity-50 text-sm mt-2"
+              >
+                {planLoading ? <Loader className="w-5 h-5 animate-spin" /> : <span>Create Plan</span>}
+              </button>
+            </form>
           </div>
         </div>
       )}

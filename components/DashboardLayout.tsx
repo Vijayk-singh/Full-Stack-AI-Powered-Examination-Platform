@@ -35,8 +35,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
           <div className="flex items-center gap-6">
             {user && (
-              <div className="flex items-center gap-3">
-                <div className="hidden sm:flex flex-col text-right">
+              <Link href="/dashboard/profile" className="flex items-center gap-3 hover:opacity-80 transition cursor-pointer">
+                <div className="hidden sm:flex flex-col text-right font-sans">
                   <span className="text-sm font-semibold text-white">{user.name}</span>
                   <span className="text-[10px] uppercase font-bold tracking-wider text-indigo-400">
                     {user.role}
@@ -45,8 +45,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <div className="w-9 h-9 rounded-full bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
-              </div>
+              </Link>
             )}
+
+            <Link
+              href="/dashboard/profile"
+              className="p-2 text-slate-400 hover:text-white hover:bg-slate-900 rounded-lg transition cursor-pointer"
+              title="Profile Settings"
+            >
+              <User className="w-5 h-5" />
+            </Link>
 
             <button
               onClick={handleLogout}

@@ -42,7 +42,7 @@ const TestSchema = new Schema<ITest>(
       enum: ['PRACTICE', 'SCHEDULED', 'INSTANT'], 
       default: 'PRACTICE' 
     },
-    attemptsAllowed: { type: Number, default: 1 }, // default 1 attempt
+    attemptsAllowed: { type: Number, default: 5 }, // default 1 attempt
     isPublic: { type: Boolean, default: true },
   },
   { timestamps: true }

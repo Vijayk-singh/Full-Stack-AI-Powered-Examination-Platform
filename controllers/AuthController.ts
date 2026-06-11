@@ -3,6 +3,7 @@ import { validateRegister, validateLogin } from '../validators';
 import { successResponse, handleRouteError, errorResponse } from '../utils/response';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { verifyAuth } from '../utils/auth';
 
 export class AuthController {
   async register(req: Request) {
@@ -90,6 +91,40 @@ export class AuthController {
       }
       await authService.resetPassword(body.userId, body.password);
       return successResponse(null, 'Password has been reset successfully');
+    } catch (error) {
+      return handleRouteError(error);
+    }
+  }
+
+  async getProfile(req: Request) {
+    try {
+      const userPayload = verifyAuth(req);
+      const { userRepository } = await import('../repositories/UserRepository');
+      const userDetails = await userRepository.findById(userPayload.userId);
+      if (!userDetails) {
+        return errorResponse('User not found', 404);
+      }
+      const userObj = userDetails.toObject();
+      delete userObj.password;
+      return successResponse(userObj);
+    } catch (error) {
+      return handleRouteError(error);
+    }
+  }
+
+  async updateProfile(req: Request) {
+    try {
+      const userPayload = verifyAuth(req);
+      const body = await req.json();
+      
+      const updatedUser = await authService.updateUserProfile(userPayload.userId, {
+        name: body.name,
+        email: body.email,
+        avatar: body.avatar,
+        password: body.password
+      });
+
+      return successResponse(updatedUser, 'Profile updated successfully');
     } catch (error) {
       return handleRouteError(error);
     }
