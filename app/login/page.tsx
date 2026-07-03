@@ -49,6 +49,34 @@ export default function LoginPage() {
     }
   };
 
+  const handleQuickLogin = async (testEmail: string, testPass: string) => {
+    setError(null);
+    setLoading(true);
+    setEmail(testEmail);
+    setPassword(testPass);
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: testEmail, password: testPass }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Authentication failed');
+      }
+
+      setAuth(data.data.user, data.data.accessToken);
+      router.push('/dashboard');
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex-1 flex items-center justify-center min-h-screen px-4 bg-slate-950 relative">
       {/* Background glow */}
@@ -122,6 +150,36 @@ export default function LoginPage() {
             )}
           </button>
         </form>
+
+        <div className="mt-6">
+          <p className="text-xs text-center text-slate-500 font-semibold mb-3 uppercase tracking-wider">Test Accounts (One-Click Login)</p>
+          <div className="flex gap-2 justify-center">
+            <button 
+              type="button"
+              onClick={() => handleQuickLogin('admin@edugauge.com', 'admin123')}
+              disabled={loading}
+              className="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition border border-slate-700 disabled:opacity-50"
+            >
+              Admin
+            </button>
+            <button 
+              type="button"
+              onClick={() => handleQuickLogin('teacher@edugauge.com', 'teacher123')}
+              disabled={loading}
+              className="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition border border-slate-700 disabled:opacity-50"
+            >
+              Teacher
+            </button>
+            <button 
+              type="button"
+              onClick={() => handleQuickLogin('student@edugauge.com', 'student123')}
+              disabled={loading}
+              className="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition border border-slate-700 disabled:opacity-50"
+            >
+              Student
+            </button>
+          </div>
+        </div>
 
         <p className="text-center text-sm text-slate-400 mt-8">
           Don&apos;t have an account?{' '}
