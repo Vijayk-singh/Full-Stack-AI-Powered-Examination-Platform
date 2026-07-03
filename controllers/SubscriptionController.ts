@@ -21,10 +21,10 @@ export class SubscriptionController {
     }
   }
 
-  // Admin: Update subscription plan
+  // Admin/Teacher: Update subscription plan
   async updatePlan(req: Request, id: string) {
     try {
-      verifyAuth(req, ['ADMIN']);
+      verifyAuth(req, ['ADMIN', 'TEACHER']);
       const body = await req.json();
       const updated = await subscriptionService.updatePlan(id, body);
       if (!updated) {

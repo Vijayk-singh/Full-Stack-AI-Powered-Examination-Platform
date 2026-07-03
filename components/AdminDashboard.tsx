@@ -203,16 +203,16 @@ export default function AdminDashboard() {
     <div className="flex flex-col gap-8 animate-fade-in">
       {/* Title */}
       <div>
-        <h1 className="text-3xl font-extrabold text-white">Administration Portal</h1>
-        <p className="text-slate-400 mt-1">Supervise accounts, configure curricular subjects, and review AI usage metrics.</p>
+        <h1 className="text-3xl font-extrabold text-slate-800">Administration Portal</h1>
+        <p className="text-slate-500 mt-1">Supervise accounts, configure curricular subjects, and review AI usage metrics.</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-900 overflow-x-auto gap-2">
+      <div className="flex border-b border-slate-200 overflow-x-auto gap-2">
         <button
           onClick={() => setActiveTab('stats')}
           className={`px-4 py-2.5 font-semibold text-sm transition cursor-pointer border-b-2 whitespace-nowrap ${
-            activeTab === 'stats' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-white'
+            activeTab === 'stats' ? 'border-indigo-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           System Stats
@@ -220,7 +220,7 @@ export default function AdminDashboard() {
         <button
           onClick={() => setActiveTab('users')}
           className={`px-4 py-2.5 font-semibold text-sm transition cursor-pointer border-b-2 whitespace-nowrap ${
-            activeTab === 'users' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-white'
+            activeTab === 'users' ? 'border-indigo-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           Manage Accounts
@@ -228,7 +228,7 @@ export default function AdminDashboard() {
         <button
           onClick={() => setActiveTab('curriculum')}
           className={`px-4 py-2.5 font-semibold text-sm transition cursor-pointer border-b-2 whitespace-nowrap ${
-            activeTab === 'curriculum' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-white'
+            activeTab === 'curriculum' ? 'border-indigo-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           Subjects & Topics
@@ -236,7 +236,7 @@ export default function AdminDashboard() {
         <button
           onClick={() => setActiveTab('ai')}
           className={`px-4 py-2.5 font-semibold text-sm transition cursor-pointer border-b-2 whitespace-nowrap ${
-            activeTab === 'ai' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-white'
+            activeTab === 'ai' ? 'border-indigo-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           AI Usage Analytics
@@ -244,7 +244,7 @@ export default function AdminDashboard() {
         <button
           onClick={() => setActiveTab('subscriptions')}
           className={`px-4 py-2.5 font-semibold text-sm transition cursor-pointer border-b-2 whitespace-nowrap ${
-            activeTab === 'subscriptions' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-white'
+            activeTab === 'subscriptions' ? 'border-indigo-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           Subscriptions
@@ -255,85 +255,85 @@ export default function AdminDashboard() {
       {activeTab === 'stats' && (
         <div className="flex flex-col gap-8">
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
-            <div className="glass-panel p-6 rounded-2xl flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+            <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
                 <Users className="w-6 h-6" />
               </div>
               <div>
                 <span className="text-xs text-slate-500 uppercase font-bold tracking-wider">Total Users</span>
-                <h3 className="text-2xl font-bold text-white mt-0.5">{users.length}</h3>
+                <h3 className="text-2xl font-bold text-slate-800 mt-0.5">{users.length}</h3>
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-2xl flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div>
                 <span className="text-xs text-slate-500 uppercase font-bold tracking-wider">Total Teachers</span>
-                <h3 className="text-2xl font-bold text-white mt-0.5">
+                <h3 className="text-2xl font-bold text-slate-800 mt-0.5">
                   {users.filter((u) => u.role === 'TEACHER').length}
                 </h3>
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-2xl flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+            <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600">
                 <BookOpen className="w-6 h-6" />
               </div>
               <div>
                 <span className="text-xs text-slate-500 uppercase font-bold tracking-wider">Subjects Catalog</span>
-                <h3 className="text-2xl font-bold text-white mt-0.5">{subjects.length}</h3>
+                <h3 className="text-2xl font-bold text-slate-800 mt-0.5">{subjects.length}</h3>
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-2xl flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+            <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-red-500">
                 <Server className="w-6 h-6" />
               </div>
               <div>
                 <span className="text-xs text-slate-500 uppercase font-bold tracking-wider">Platform Health</span>
-                <h3 className="text-2xl font-bold text-emerald-400 mt-0.5">99.9%</h3>
+                <h3 className="text-2xl font-bold text-emerald-600 mt-0.5">99.9%</h3>
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 glass-panel p-6 rounded-2xl border border-slate-900 flex flex-col gap-4">
+            <div className="lg:col-span-2 bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-slate-200 flex flex-col gap-4">
               <h3 className="text-lg font-bold flex items-center gap-2">
-                <Activity className="w-5 h-5 text-indigo-400" />
+                <Activity className="w-5 h-5 text-blue-600" />
                 Platform Activity Log
               </h3>
-              <div className="flex flex-col gap-3.5 text-xs text-slate-400 font-mono">
-                <div className="p-3 bg-slate-900/60 rounded border border-slate-850 flex justify-between">
+              <div className="flex flex-col gap-3.5 text-xs text-slate-500 font-mono">
+                <div className="p-3 bg-white rounded border border-slate-850 flex justify-between">
                   <span>[2026-06-09 15:05:42] User Register success: vijay@gmail.com</span>
-                  <span className="text-indigo-400">INFO</span>
+                  <span className="text-blue-600">INFO</span>
                 </div>
-                <div className="p-3 bg-slate-900/60 rounded border border-slate-850 flex justify-between">
+                <div className="p-3 bg-white rounded border border-slate-850 flex justify-between">
                   <span>[2026-06-09 15:03:14] User Authentication: jane@edugauge.com</span>
-                  <span className="text-indigo-400">INFO</span>
+                  <span className="text-blue-600">INFO</span>
                 </div>
-                <div className="p-3 bg-slate-900/60 rounded border border-slate-850 flex justify-between">
+                <div className="p-3 bg-white rounded border border-slate-850 flex justify-between">
                   <span>[2026-06-09 14:58:30] AI Model Call: gemini-1.5-flash generated 5 questions</span>
-                  <span className="text-indigo-400">INFO</span>
+                  <span className="text-blue-600">INFO</span>
                 </div>
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-2xl border border-slate-900 flex flex-col gap-4">
-              <h3 className="text-lg font-bold text-white">System Settings</h3>
+            <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-slate-200 flex flex-col gap-4">
+              <h3 className="text-lg font-bold text-slate-800">System Settings</h3>
               <div className="flex flex-col gap-3 text-xs">
-                <div className="flex justify-between items-center py-2 border-b border-slate-900">
-                  <span className="text-slate-400 font-semibold">Self Registration</span>
-                  <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 rounded font-bold">ENABLED</span>
+                <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                  <span className="text-slate-500 font-semibold">Self Registration</span>
+                  <span className="px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded font-bold">ENABLED</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-slate-900">
-                  <span className="text-slate-400 font-semibold">Webcam Proctoring</span>
-                  <span className="px-2 py-0.5 bg-amber-500/10 text-amber-400 rounded font-bold">READY</span>
+                <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                  <span className="text-slate-500 font-semibold">Webcam Proctoring</span>
+                  <span className="px-2 py-0.5 bg-amber-50 text-amber-600 rounded font-bold">READY</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-slate-900">
-                  <span className="text-slate-400 font-semibold">PDF Parsing Node</span>
-                  <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 rounded font-bold">ONLINE</span>
+                <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                  <span className="text-slate-500 font-semibold">PDF Parsing Node</span>
+                  <span className="px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded font-bold">ONLINE</span>
                 </div>
               </div>
             </div>
@@ -343,16 +343,16 @@ export default function AdminDashboard() {
 
       {/* TAB 2: MANAGE ACCOUNTS */}
       {activeTab === 'users' && (
-        <div className="glass-panel p-6 rounded-2xl border border-slate-900">
+        <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-slate-200">
           <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-            <Users className="w-5 h-5 text-indigo-400" />
+            <Users className="w-5 h-5 text-blue-600" />
             Registered User Accounts
           </h2>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-400 border-collapse">
+            <table className="w-full text-left text-sm text-slate-500 border-collapse">
               <thead>
-                <tr className="border-b border-slate-900 text-slate-500 font-bold">
+                <tr className="border-b border-slate-200 text-slate-500 font-bold">
                   <th className="py-3 px-4">Name</th>
                   <th className="py-3 px-4">Email</th>
                   <th className="py-3 px-4">Role</th>
@@ -362,18 +362,18 @@ export default function AdminDashboard() {
               </thead>
               <tbody>
                 {users.map((u: any) => (
-                  <tr key={u._id} className="border-b border-slate-900 hover:bg-slate-900/20">
-                    <td className="py-4 px-4 font-semibold text-white">{u.name}</td>
+                  <tr key={u._id} className="border-b border-slate-200 hover:bg-white">
+                    <td className="py-4 px-4 font-semibold text-slate-800">{u.name}</td>
                     <td className="py-4 px-4">{u.email}</td>
                     <td className="py-4 px-4">
-                      <span className="px-2 py-0.5 bg-indigo-500/10 text-indigo-400 rounded text-[10px] font-bold">
+                      <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-[10px] font-bold">
                         {u.role}
                       </span>
                     </td>
                     <td className="py-4 px-4">
                       <span
                         className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                          u.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'
+                          u.status === 'active' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-500/10 text-red-500'
                         }`}
                       >
                         {u.status}
@@ -383,14 +383,14 @@ export default function AdminDashboard() {
                       {u.status === 'active' ? (
                         <button
                           onClick={() => alert('Account suspended')}
-                          className="px-2.5 py-1 bg-red-600/15 border border-red-500/25 text-red-400 rounded text-xs font-semibold hover:bg-red-600/25 transition cursor-pointer"
+                          className="px-2.5 py-1 bg-red-600/15 border border-red-500/25 text-red-500 rounded text-xs font-semibold hover:bg-red-600/25 transition cursor-pointer"
                         >
                           Suspend
                         </button>
                       ) : (
                         <button
                           onClick={() => alert('Account activated')}
-                          className="px-2.5 py-1 bg-emerald-600/15 border border-emerald-500/25 text-emerald-400 rounded text-xs font-semibold hover:bg-emerald-600/25 transition cursor-pointer"
+                          className="px-2.5 py-1 bg-emerald-600/15 border border-emerald-500/25 text-emerald-600 rounded text-xs font-semibold hover:bg-emerald-600/25 transition cursor-pointer"
                         >
                           Activate
                         </button>
@@ -407,16 +407,16 @@ export default function AdminDashboard() {
       {/* TAB 3: SUBJECT MANAGEMENT */}
       {activeTab === 'curriculum' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 glass-panel p-6 rounded-2xl border border-slate-900 flex flex-col gap-4">
+          <div className="lg:col-span-2 bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-slate-200 flex flex-col gap-4">
             <h2 className="text-xl font-bold flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-indigo-400" />
+              <BookOpen className="w-5 h-5 text-blue-600" />
               Subjects Catalog
             </h2>
             <div className="flex flex-col gap-3">
               {subjects.map((sub: any) => (
-                <div key={sub._id} className="p-4 bg-slate-900/60 rounded-xl border border-slate-800 flex justify-between items-center">
+                <div key={sub._id} className="p-4 bg-white rounded-xl border border-slate-200 flex justify-between items-center">
                   <div>
-                    <h4 className="font-semibold text-white">{sub.name}</h4>
+                    <h4 className="font-semibold text-slate-800">{sub.name}</h4>
                     <p className="text-xs text-slate-500 mt-1">{sub.description || 'No description added'}</p>
                   </div>
                 </div>
@@ -427,36 +427,36 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="glass-panel p-6 rounded-2xl border border-slate-900">
+          <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-slate-200">
             <h3 className="text-lg font-bold mb-4">Add Curriculum Subject</h3>
             <form onSubmit={handleCreateSubject} className="flex flex-col gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Subject Name</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Subject Name</label>
                 <input
                   type="text"
                   required
                   value={newSubName}
                   onChange={(e) => setNewSubName(e.target.value)}
                   placeholder="e.g. Mathematics"
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                  className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Description</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Description</label>
                 <textarea
                   rows={3}
                   value={newSubDesc}
                   onChange={(e) => setNewSubDesc(e.target.value)}
                   placeholder="Subject scope description..."
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                  className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none text-sm"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={subjectLoading}
-                className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition disabled:opacity-50 text-sm"
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-slate-800 font-semibold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition disabled:opacity-50 text-sm"
               >
                 {subjectLoading ? <Loader className="w-5 h-5 animate-spin" /> : <span>Add Subject</span>}
               </button>
@@ -467,27 +467,27 @@ export default function AdminDashboard() {
 
       {/* TAB 4: AI TELEMETRY */}
       {activeTab === 'ai' && (
-        <div className="glass-panel p-6 rounded-2xl border border-slate-900 flex flex-col gap-6">
-          <h2 className="text-xl font-bold flex items-center gap-2 text-indigo-400">
+        <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-slate-200 flex flex-col gap-6">
+          <h2 className="text-xl font-bold flex items-center gap-2 text-blue-600">
             <Cpu className="w-5 h-5" />
             AI Execution Logs & Usage
           </h2>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             Audit logs tracking LLM api execution counts, token consumption estimates, and operational logs.
           </p>
 
           <div className="grid grid-cols-3 gap-6">
-            <div className="p-4 bg-slate-900/60 border border-slate-850 rounded-xl">
+            <div className="p-4 bg-white border border-slate-850 rounded-xl">
               <span className="text-xs text-slate-500 block">Total API Calls</span>
-              <span className="text-2xl font-bold text-white block mt-1">48 calls</span>
+              <span className="text-2xl font-bold text-slate-800 block mt-1">48 calls</span>
             </div>
-            <div className="p-4 bg-slate-900/60 border border-slate-850 rounded-xl">
+            <div className="p-4 bg-white border border-slate-850 rounded-xl">
               <span className="text-xs text-slate-500 block">Estimated Tokens</span>
-              <span className="text-2xl font-bold text-indigo-400 block mt-1">142,400</span>
+              <span className="text-2xl font-bold text-blue-600 block mt-1">142,400</span>
             </div>
-            <div className="p-4 bg-slate-900/60 border border-slate-850 rounded-xl">
+            <div className="p-4 bg-white border border-slate-850 rounded-xl">
               <span className="text-xs text-slate-500 block">Monthly Token Budget</span>
-              <span className="text-2xl font-bold text-emerald-400 block mt-1">1.4% Used</span>
+              <span className="text-2xl font-bold text-emerald-600 block mt-1">1.4% Used</span>
             </div>
           </div>
         </div>
@@ -499,22 +499,22 @@ export default function AdminDashboard() {
           {/* Left Columns: Plans list & Enrollments list */}
           <div className="lg:col-span-2 flex flex-col gap-8 animate-fade-in">
             {/* Subscription Plans */}
-            <div className="glass-panel p-6 rounded-2xl border border-slate-900 flex flex-col gap-4">
+            <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-slate-200 flex flex-col gap-4">
               <h2 className="text-xl font-bold flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-indigo-400" />
+                <CreditCard className="w-5 h-5 text-blue-600" />
                 Dynamic Subscription Plans
               </h2>
               <div className="flex flex-col gap-3">
                 {plans.map((plan: any) => (
-                  <div key={plan._id} className="p-5 bg-slate-900/60 rounded-xl border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-slate-700/80 transition">
+                  <div key={plan._id} className="p-5 bg-white rounded-xl border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-slate-300/80 transition">
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="font-semibold text-white text-lg">{plan.name}</h4>
-                        <span className="px-2.5 py-0.5 bg-emerald-500/10 text-emerald-400 rounded-lg text-xs font-bold">
+                        <h4 className="font-semibold text-slate-800 text-lg">{plan.name}</h4>
+                        <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-600 rounded-lg text-xs font-bold">
                           ${plan.price}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-400 mt-1">{plan.description || 'No description added'}</p>
+                      <p className="text-xs text-slate-500 mt-1">{plan.description || 'No description added'}</p>
                       
                       <div className="flex flex-wrap gap-4 mt-3 text-xs text-slate-500">
                         <span className="flex items-center gap-1">
@@ -524,13 +524,13 @@ export default function AdminDashboard() {
                             : `Duration: ${plan.durationDays} days`
                           }
                         </span>
-                        <span>Attempts per Test: <strong className="text-slate-300">{plan.attemptsPerTest}</strong></span>
-                        <span>Tests included: <strong className="text-slate-300">{plan.availableTests?.length || 0}</strong></span>
+                        <span>Attempts per Test: <strong className="text-slate-600">{plan.attemptsPerTest}</strong></span>
+                        <span>Tests included: <strong className="text-slate-600">{plan.availableTests?.length || 0}</strong></span>
                       </div>
                     </div>
                     <button
                       onClick={() => handleDeletePlan(plan._id)}
-                      className="px-3 py-1.5 bg-red-600/10 hover:bg-red-600/25 border border-red-500/20 text-red-400 rounded-lg text-xs font-semibold cursor-pointer transition w-full sm:w-auto text-center"
+                      className="px-3 py-1.5 bg-red-600/10 hover:bg-red-600/25 border border-red-500/20 text-red-500 rounded-lg text-xs font-semibold cursor-pointer transition w-full sm:w-auto text-center"
                     >
                       Delete Plan
                     </button>
@@ -543,15 +543,15 @@ export default function AdminDashboard() {
             </div>
 
             {/* Student Subscriptions List */}
-            <div className="glass-panel p-6 rounded-2xl border border-slate-900">
+            <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-slate-200">
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                <Users className="w-5 h-5 text-indigo-400" />
+                <Users className="w-5 h-5 text-blue-600" />
                 Active Student Subscriptions
               </h2>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-slate-400 border-collapse">
+                <table className="w-full text-left text-sm text-slate-500 border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-900 text-slate-500 font-bold">
+                    <tr className="border-b border-slate-200 text-slate-500 font-bold">
                       <th className="py-3 px-4">Student</th>
                       <th className="py-3 px-4">Plan Name</th>
                       <th className="py-3 px-4">Start Date</th>
@@ -561,23 +561,23 @@ export default function AdminDashboard() {
                   </thead>
                   <tbody>
                     {userSubs.map((sub: any) => (
-                      <tr key={sub._id} className="border-b border-slate-900 hover:bg-slate-900/20">
-                        <td className="py-4 px-4 font-semibold text-white">
+                      <tr key={sub._id} className="border-b border-slate-200 hover:bg-white">
+                        <td className="py-4 px-4 font-semibold text-slate-800">
                           <div>
                             <div>{sub.userId?.name || 'Unknown Student'}</div>
                             <div className="text-[10px] text-slate-500 font-normal">{sub.userId?.email || ''}</div>
                           </div>
                         </td>
-                        <td className="py-4 px-4 text-slate-300 font-medium">{sub.planId?.name || 'Deleted Plan'}</td>
+                        <td className="py-4 px-4 text-slate-600 font-medium">{sub.planId?.name || 'Deleted Plan'}</td>
                         <td className="py-4 px-4 text-xs">{new Date(sub.startDate).toLocaleDateString()}</td>
                         <td className="py-4 px-4 text-xs">{new Date(sub.endDate).toLocaleDateString()}</td>
                         <td className="py-4 px-4">
                           <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                             sub.status === 'ACTIVE' 
-                              ? 'bg-emerald-500/10 text-emerald-400' 
+                              ? 'bg-emerald-50 text-emerald-600' 
                               : sub.status === 'EXPIRED'
-                              ? 'bg-amber-500/10 text-amber-400'
-                              : 'bg-slate-800 text-slate-400'
+                              ? 'bg-amber-50 text-amber-600'
+                              : 'bg-slate-100 text-slate-500'
                           }`}>
                             {sub.status}
                           </span>
@@ -596,65 +596,65 @@ export default function AdminDashboard() {
           </div>
 
           {/* Right Column: Create form */}
-          <div className="glass-panel p-6 rounded-2xl border border-slate-900 flex flex-col gap-5">
+          <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-slate-200 flex flex-col gap-5">
             <div>
-              <h3 className="text-lg font-bold text-white">Create Subscription Plan</h3>
+              <h3 className="text-lg font-bold text-slate-800">Create Subscription Plan</h3>
               <p className="text-xs text-slate-500 mt-1">Configure pricing, test accessibility, attempts, and duration.</p>
             </div>
             
             <form onSubmit={handleCreatePlan} className="flex flex-col gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Plan Name</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Plan Name</label>
                 <input
                   type="text"
                   required
                   value={newPlanName}
                   onChange={(e) => setNewPlanName(e.target.value)}
                   placeholder="e.g. Premium Access Pack"
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                  className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Description</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Description</label>
                 <textarea
                   rows={2}
                   value={newPlanDesc}
                   onChange={(e) => setNewPlanDesc(e.target.value)}
                   placeholder="What is included in this subscription plan..."
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                  className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none text-sm"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Price ($)</label>
+                  <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Price ($)</label>
                   <input
                     type="number"
                     min={0}
                     required
                     value={newPlanPrice}
                     onChange={(e) => setNewPlanPrice(parseFloat(e.target.value) || 0)}
-                    className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                    className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Attempts per Test</label>
+                  <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Attempts per Test</label>
                   <input
                     type="number"
                     min={1}
                     required
                     value={newPlanAttempts}
                     onChange={(e) => setNewPlanAttempts(parseInt(e.target.value) || 1)}
-                    className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                    className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none text-sm"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Expiry Type</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Expiry Type</label>
                 <div className="grid grid-cols-2 gap-4 mb-2 text-xs">
-                  <label className="flex items-center gap-2 text-slate-300">
+                  <label className="flex items-center gap-2 text-slate-600">
                     <input
                       type="radio"
                       name="expiryType"
@@ -664,7 +664,7 @@ export default function AdminDashboard() {
                     />
                     Duration (Days)
                   </label>
-                  <label className="flex items-center gap-2 text-slate-300">
+                  <label className="flex items-center gap-2 text-slate-600">
                     <input
                       type="radio"
                       name="expiryType"
@@ -684,7 +684,7 @@ export default function AdminDashboard() {
                     value={newPlanDuration}
                     onChange={(e) => setNewPlanDuration(parseInt(e.target.value) || 30)}
                     placeholder="e.g. 30 days"
-                    className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                    className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none text-sm"
                   />
                 ) : (
                   <input
@@ -692,16 +692,16 @@ export default function AdminDashboard() {
                     required
                     value={newPlanExpiryDate}
                     onChange={(e) => setNewPlanExpiryDate(e.target.value)}
-                    className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                    className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none text-sm"
                   />
                 )}
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Included Tests</label>
-                <div className="max-h-40 overflow-y-auto border border-slate-850 rounded-xl p-3 bg-slate-950/40 flex flex-col gap-2">
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Included Tests</label>
+                <div className="max-h-40 overflow-y-auto border border-slate-850 rounded-xl p-3 bg-[#f8f9fa]/40 flex flex-col gap-2">
                   {allTests.map((t: any) => (
-                    <label key={t._id} className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer select-none">
+                    <label key={t._id} className="flex items-center gap-2 text-xs text-slate-600 cursor-pointer select-none">
                       <input
                         type="checkbox"
                         checked={newPlanTests.includes(t._id)}
@@ -726,7 +726,7 @@ export default function AdminDashboard() {
               <button
                 type="submit"
                 disabled={planLoading}
-                className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition disabled:opacity-50 text-sm mt-2"
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-slate-800 font-semibold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition disabled:opacity-50 text-sm mt-2"
               >
                 {planLoading ? <Loader className="w-5 h-5 animate-spin" /> : <span>Create Plan</span>}
               </button>

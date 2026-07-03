@@ -120,7 +120,7 @@ export default function ProfilePage() {
     <DashboardLayout>
       <div className="max-w-2xl mx-auto w-full flex flex-col gap-8 animate-fade-in">
         <div>
-          <h1 className="text-3xl font-extrabold text-white">Profile Settings</h1>
+          <h1 className="text-3xl font-extrabold t">Profile Settings</h1>
           <p className="text-slate-400 mt-1">Manage your identity credentials and avatar representation.</p>
         </div>
 
@@ -135,7 +135,7 @@ export default function ProfilePage() {
           </div>
         )}
 
-        <div className="glass-panel p-8 rounded-2xl border border-slate-900 flex flex-col gap-6">
+        <div className=" p-8 rounded-2xl border border-slate-900 flex flex-col gap-6">
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             
             {/* Avatar Section */}

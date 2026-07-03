@@ -3,9 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../lib/store/auth';
-import { Cpu, FileText, Plus, Trash2, Check, X, ShieldAlert, BookOpen, AlertCircle, Loader } from 'lucide-react';
+import { Cpu, FileText, Plus, Trash2, Check, X, ShieldAlert, BookOpen, AlertCircle, Loader, Edit } from 'lucide-react';
+
+import { useRouter } from 'next/navigation';
 
 export default function TeacherDashboard() {
+  const router = useRouter();
   const token = useAuthStore((state) => state.accessToken);
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<'overview' | 'manual' | 'ai' | 'pdf' | 'schedule'>('overview');
@@ -344,16 +347,16 @@ export default function TeacherDashboard() {
     <div className="flex flex-col gap-8 animate-fade-in">
       {/* Title */}
       <div>
-        <h1 className="text-3xl font-extrabold text-white">Teacher Portal</h1>
-        <p className="text-slate-400 mt-1">Manage exam sheets, use AI question tools, or ingest files.</p>
+        <h1 className="text-3xl font-extrabold text-slate-800">Teacher Portal</h1>
+        <p className="text-slate-500 mt-1">Manage exam sheets, use AI question tools, or ingest files.</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-900 overflow-x-auto gap-2">
+      <div className="flex border-b border-slate-200 overflow-x-auto gap-2">
         <button
           onClick={() => setActiveTab('overview')}
           className={`px-4 py-2.5 font-semibold text-sm transition cursor-pointer border-b-2 whitespace-nowrap ${
-            activeTab === 'overview' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-white'
+            activeTab === 'overview' ? 'border-indigo-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           Active Exams
@@ -361,7 +364,7 @@ export default function TeacherDashboard() {
         <button
           onClick={() => setActiveTab('manual')}
           className={`px-4 py-2.5 font-semibold text-sm transition cursor-pointer border-b-2 whitespace-nowrap ${
-            activeTab === 'manual' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-white'
+            activeTab === 'manual' ? 'border-indigo-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           Add Question
@@ -369,7 +372,7 @@ export default function TeacherDashboard() {
         <button
           onClick={() => setActiveTab('ai')}
           className={`px-4 py-2.5 font-semibold text-sm transition cursor-pointer border-b-2 whitespace-nowrap ${
-            activeTab === 'ai' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-white'
+            activeTab === 'ai' ? 'border-indigo-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           AI Test Builder
@@ -377,7 +380,7 @@ export default function TeacherDashboard() {
         <button
           onClick={() => setActiveTab('pdf')}
           className={`px-4 py-2.5 font-semibold text-sm transition cursor-pointer border-b-2 whitespace-nowrap ${
-            activeTab === 'pdf' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-white'
+            activeTab === 'pdf' ? 'border-indigo-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           PDF Ingestion
@@ -385,7 +388,7 @@ export default function TeacherDashboard() {
         <button
           onClick={() => setActiveTab('schedule')}
           className={`px-4 py-2.5 font-semibold text-sm transition cursor-pointer border-b-2 whitespace-nowrap ${
-            activeTab === 'schedule' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-slate-400 hover:text-white'
+            activeTab === 'schedule' ? 'border-indigo-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           Schedule Test
@@ -394,9 +397,9 @@ export default function TeacherDashboard() {
 
       {/* TAB 1: OVERVIEW / ACTIVE EXAMS */}
       {activeTab === 'overview' && (
-        <div className="glass-panel p-6 rounded-2xl border border-slate-900">
+        <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-slate-200">
           <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-indigo-400" />
+            <BookOpen className="w-5 h-5 text-blue-600" />
             Exams Created
           </h2>
 
@@ -406,9 +409,9 @@ export default function TeacherDashboard() {
             <div className="py-8 text-center text-slate-500">No exams created yet. Switch to Schedule Test to create one.</div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-slate-400 border-collapse">
+              <table className="w-full text-left text-sm text-slate-500 border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-900 text-slate-500 font-bold">
+                  <tr className="border-b border-slate-200 text-slate-500 font-bold">
                     <th className="py-3 px-4">Title</th>
                     <th className="py-3 px-4">Subject</th>
                     <th className="py-3 px-4">Duration</th>
@@ -419,8 +422,8 @@ export default function TeacherDashboard() {
                 </thead>
                 <tbody>
                   {tests.map((test: any) => (
-                    <tr key={test._id} className="border-b border-slate-900 hover:bg-slate-900/20">
-                      <td className="py-4 px-4 font-semibold text-white">{test.title}</td>
+                    <tr key={test._id} className="border-b border-slate-200 hover:bg-white">
+                      <td className="py-4 px-4 font-semibold text-slate-800">{test.title}</td>
                       <td className="py-4 px-4">{test.subjectId?.name || 'General'}</td>
                       <td className="py-4 px-4">{test.duration} mins</td>
                       <td className="py-4 px-4">{test.questions?.length || 0}</td>
@@ -428,20 +431,27 @@ export default function TeacherDashboard() {
                         <span
                           className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                             test.status === 'PUBLISHED'
-                              ? 'bg-emerald-500/10 text-emerald-400'
+                              ? 'bg-emerald-50 text-emerald-600'
                               : test.status === 'DRAFT'
-                              ? 'bg-amber-500/10 text-amber-400'
-                              : 'bg-red-500/10 text-red-400'
+                              ? 'bg-amber-50 text-amber-600'
+                              : 'bg-red-500/10 text-red-500'
                           }`}
                         >
                           {test.status}
                         </span>
                       </td>
                       <td className="py-4 px-4 text-right flex justify-end gap-3">
+                        <button
+                          onClick={() => router.push(`/dashboard/teacher/test/${test._id}`)}
+                          className="p-1.5 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition cursor-pointer"
+                          title="Edit Test"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
                         {test.status !== 'PUBLISHED' ? (
                           <button
                             onClick={() => toggleStatusMutation.mutate({ id: test._id, status: 'PUBLISHED' })}
-                            className="p-1.5 bg-emerald-600/10 border border-emerald-500/25 text-emerald-400 rounded hover:bg-emerald-600/20 transition cursor-pointer"
+                            className="p-1.5 bg-emerald-600/10 border border-emerald-500/25 text-emerald-600 rounded hover:bg-emerald-600/20 transition cursor-pointer"
                             title="Publish Test"
                           >
                             <Check className="w-4 h-4" />
@@ -449,7 +459,7 @@ export default function TeacherDashboard() {
                         ) : (
                           <button
                             onClick={() => toggleStatusMutation.mutate({ id: test._id, status: 'UNPUBLISHED' })}
-                            className="p-1.5 bg-amber-600/10 border border-amber-500/25 text-amber-400 rounded hover:bg-amber-600/20 transition cursor-pointer"
+                            className="p-1.5 bg-amber-600/10 border border-amber-500/25 text-amber-600 rounded hover:bg-amber-600/20 transition cursor-pointer"
                             title="Unpublish"
                           >
                             <X className="w-4 h-4" />
@@ -461,7 +471,7 @@ export default function TeacherDashboard() {
                               deleteTestMutation.mutate(test._id);
                             }
                           }}
-                          className="p-1.5 bg-red-600/10 border border-red-500/25 text-red-400 rounded hover:bg-red-600/20 transition cursor-pointer"
+                          className="p-1.5 bg-red-600/10 border border-red-500/25 text-red-500 rounded hover:bg-red-600/20 transition cursor-pointer"
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -478,53 +488,53 @@ export default function TeacherDashboard() {
 
       {/* TAB 2: MANUAL QUESTION ADD */}
       {activeTab === 'manual' && (
-        <div className="glass-panel p-6 rounded-2xl border border-slate-900 max-w-3xl">
+        <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-slate-200 max-w-3xl">
           <h2 className="text-xl font-bold mb-6">Create Manual Question</h2>
           <form onSubmit={handleCreateQuestion} className="flex flex-col gap-5">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Subject</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Subject</label>
                 <input
                   type="text"
                   required
                   value={qSubject}
                   onChange={(e) => setQSubject(e.target.value)}
                   placeholder="e.g. Physics"
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                  className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Topic</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Topic</label>
                 <input
                   type="text"
                   required
                   value={qTopic}
                   onChange={(e) => setQTopic(e.target.value)}
                   placeholder="e.g. Thermodynamics"
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                  className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Question Text</label>
+              <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Question Text</label>
               <textarea
                 required
                 rows={3}
                 value={qText}
                 onChange={(e) => setQText(e.target.value)}
                 placeholder="Enter question context here..."
-                className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
               />
             </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Type</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Type</label>
                 <select
                   value={qType}
                   onChange={(e) => setQType(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                  className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
                 >
                   <option value="MCQ">Single Correct MCQ</option>
                   <option value="MULTIPLE_CORRECT">Multiple Correct MCQ</option>
@@ -534,11 +544,11 @@ export default function TeacherDashboard() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Difficulty</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Difficulty</label>
                 <select
                   value={qDifficulty}
                   onChange={(e) => setQDifficulty(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                  className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
                 >
                   <option value="EASY">EASY</option>
                   <option value="MEDIUM">MEDIUM</option>
@@ -546,24 +556,24 @@ export default function TeacherDashboard() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Correct Answer</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Correct Answer</label>
                 <input
                   type="text"
                   required
                   value={qCorrect}
                   onChange={(e) => setQCorrect(e.target.value)}
                   placeholder={qType === 'MCQ' ? '0 to 3 index' : qType === 'MULTIPLE_CORRECT' ? '0,2 (comma array)' : qType === 'TRUE_FALSE' ? 'true/false' : 'number/value'}
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                  className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
                 />
               </div>
             </div>
 
             {(qType === 'MCQ' || qType === 'MULTIPLE_CORRECT') && (
               <div className="flex flex-col gap-3">
-                <label className="block text-xs font-semibold uppercase text-slate-400">Options List</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500">Options List</label>
                 {qOptions.map((opt, i) => (
                   <div key={i} className="flex gap-2 items-center">
-                    <span className="text-xs font-bold text-indigo-400">Option {i + 1}</span>
+                    <span className="text-xs font-bold text-blue-600">Option {i + 1}</span>
                     <input
                       type="text"
                       required
@@ -574,7 +584,7 @@ export default function TeacherDashboard() {
                         setQOptions(newOpts);
                       }}
                       placeholder={`Enter Option ${String.fromCharCode(65 + i)}`}
-                      className="flex-1 px-4 py-1.5 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-sm"
+                      className="flex-1 px-4 py-1.5 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none text-sm"
                     />
                   </div>
                 ))}
@@ -583,43 +593,43 @@ export default function TeacherDashboard() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Marks Allocated</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Marks Allocated</label>
                 <input
                   type="number"
                   required
                   value={qMarks}
                   onChange={(e) => setQMarks(Number(e.target.value))}
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                  className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Negative Marks</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Negative Marks</label>
                 <input
                   type="number"
                   step="0.1"
                   required
                   value={qNegMarks}
                   onChange={(e) => setQNegMarks(Number(e.target.value))}
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                  className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Explanation</label>
+              <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Explanation</label>
               <textarea
                 rows={2}
                 value={qExplanation}
                 onChange={(e) => setQExplanation(e.target.value)}
                 placeholder="Explanation or grading rationale..."
-                className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
               />
             </div>
 
             <button
               type="submit"
               disabled={qLoading}
-              className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition disabled:opacity-50"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-slate-800 font-semibold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition disabled:opacity-50"
             >
               {qLoading ? <Loader className="w-5 h-5 animate-spin" /> : <span>Catalog Question</span>}
             </button>
@@ -630,46 +640,46 @@ export default function TeacherDashboard() {
       {/* TAB 3: AI TEST GENERATOR */}
       {activeTab === 'ai' && (
         <div className="flex flex-col gap-6 max-w-3xl">
-          <div className="glass-panel p-6 rounded-2xl border border-slate-900">
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-indigo-400">
+          <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-slate-200">
+            <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-blue-600">
               <Cpu className="w-5 h-5" />
               AI Test Builder
             </h2>
-            <p className="text-xs text-slate-400 mb-6">
+            <p className="text-xs text-slate-500 mb-6">
               Prompt the platform model to generate and structure examination questions.
             </p>
 
             <form onSubmit={handleAIGenerate} className="flex flex-col gap-5">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Subject</label>
+                  <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Subject</label>
                   <input
                     type="text"
                     required
                     value={aiSubject}
                     onChange={(e) => setAiSubject(e.target.value)}
-                    className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                    className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Topic</label>
+                  <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Topic</label>
                   <input
                     type="text"
                     required
                     value={aiTopic}
                     onChange={(e) => setAiTopic(e.target.value)}
-                    className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                    className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Difficulty</label>
+                  <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Difficulty</label>
                   <select
                     value={aiDifficulty}
                     onChange={(e) => setAiDifficulty(e.target.value)}
-                    className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                    className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
                   >
                     <option value="EASY">EASY</option>
                     <option value="MEDIUM">MEDIUM</option>
@@ -677,7 +687,7 @@ export default function TeacherDashboard() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Question Count</label>
+                  <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Question Count</label>
                   <input
                     type="number"
                     min="1"
@@ -685,7 +695,7 @@ export default function TeacherDashboard() {
                     required
                     value={aiCount}
                     onChange={(e) => setAiCount(Number(e.target.value))}
-                    className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                    className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
                   />
                 </div>
               </div>
@@ -693,7 +703,7 @@ export default function TeacherDashboard() {
               <button
                 type="submit"
                 disabled={aiLoading}
-                className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition disabled:opacity-50"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-slate-800 font-semibold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition disabled:opacity-50"
               >
                 {aiLoading ? <Loader className="w-5 h-5 animate-spin" /> : <span>Draft with AI</span>}
               </button>
@@ -701,12 +711,12 @@ export default function TeacherDashboard() {
           </div>
 
           {aiResultQuestions.length > 0 && (
-            <div className="glass-panel p-6 rounded-2xl border border-indigo-500/20">
+            <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-blue-100">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-indigo-400">Review AI Draft</h3>
+                <h3 className="text-lg font-bold text-blue-600">Review AI Draft</h3>
                 <button
                   onClick={saveAIGenerated}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg transition cursor-pointer"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-slate-800 text-xs font-semibold rounded-lg transition cursor-pointer"
                 >
                   Save All to Catalog
                 </button>
@@ -714,8 +724,8 @@ export default function TeacherDashboard() {
 
               <div className="flex flex-col gap-6">
                 {aiResultQuestions.map((q, idx) => (
-                  <div key={idx} className="p-4 bg-slate-900/60 rounded-xl border border-slate-850">
-                    <h4 className="font-semibold text-white">
+                  <div key={idx} className="p-4 bg-white rounded-xl border border-slate-850">
+                    <h4 className="font-semibold text-slate-800">
                       {idx + 1}. {q.questionText}
                     </h4>
                     <ul className="mt-3 grid grid-cols-2 gap-2 text-xs">
@@ -724,15 +734,15 @@ export default function TeacherDashboard() {
                           key={oi}
                           className={`p-2 rounded border ${
                             oi === q.correctAnswer
-                              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                              : 'bg-slate-950 border-slate-900'
+                              ? 'bg-emerald-50 border-emerald-500/30 text-emerald-600'
+                              : 'bg-[#f8f9fa] border-slate-200'
                           }`}
                         >
                           Option {oi}: {opt}
                         </li>
                       ))}
                     </ul>
-                    <p className="mt-3 text-xs text-slate-400 leading-relaxed bg-indigo-950/20 p-2.5 rounded border border-indigo-500/10">
+                    <p className="mt-3 text-xs text-slate-500 leading-relaxed bg-indigo-950/20 p-2.5 rounded border border-indigo-500/10">
                       <strong>AI Explanation:</strong> {q.explanation}
                     </p>
                   </div>
@@ -746,26 +756,26 @@ export default function TeacherDashboard() {
       {/* TAB 4: PDF INGESTION */}
       {activeTab === 'pdf' && (
         <div className="flex flex-col gap-6 max-w-3xl">
-          <div className="glass-panel p-6 rounded-2xl border border-slate-900">
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-indigo-400">
+          <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-slate-200">
+            <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-blue-600">
               <FileText className="w-5 h-5" />
               PDF Ingestion (OCR / PYQ / Notes)
             </h2>
-            <p className="text-xs text-slate-400 mb-6">
+            <p className="text-xs text-slate-500 mb-6">
               Upload study sheets, questions banks, or past year papers. AI will ingest the PDF and extract syllabus metadata or raw questions.
             </p>
 
             <form onSubmit={handlePdfUpload} className="flex flex-col gap-5">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Action Mode</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Action Mode</label>
                 <div className="grid grid-cols-2 gap-4">
                   <button
                     type="button"
                     onClick={() => setPdfType('extract')}
                     className={`py-2 text-xs font-semibold rounded-lg border transition ${
                       pdfType === 'extract'
-                        ? 'bg-indigo-600/15 border-indigo-500/40 text-indigo-400'
-                        : 'bg-slate-900 border-slate-800 text-slate-400'
+                        ? 'bg-blue-600/15 border-indigo-500/40 text-blue-600'
+                        : 'bg-white border border-slate-200 shadow-sm border-slate-200 text-slate-500'
                     }`}
                   >
                     Extract Raw Questions
@@ -775,8 +785,8 @@ export default function TeacherDashboard() {
                     onClick={() => setPdfType('pyq')}
                     className={`py-2 text-xs font-semibold rounded-lg border transition ${
                       pdfType === 'pyq'
-                        ? 'bg-indigo-600/15 border-indigo-500/40 text-indigo-400'
-                        : 'bg-slate-900 border-slate-800 text-slate-400'
+                        ? 'bg-blue-600/15 border-indigo-500/40 text-blue-600'
+                        : 'bg-white border border-slate-200 shadow-sm border-slate-200 text-slate-500'
                     }`}
                   >
                     PYQ Weightage Analysis
@@ -785,20 +795,20 @@ export default function TeacherDashboard() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Select PDF File</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Select PDF File</label>
                 <input
                   type="file"
                   accept="application/pdf"
                   required
                   onChange={(e) => setPdfFile(e.target.files?.[0] || null)}
-                  className="w-full px-4 py-3 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white text-xs outline-none cursor-pointer"
+                  className="w-full px-4 py-3 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 text-xs outline-none cursor-pointer"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={pdfLoading || !pdfFile}
-                className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition disabled:opacity-50"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-slate-800 font-semibold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition disabled:opacity-50"
               >
                 {pdfLoading ? <Loader className="w-5 h-5 animate-spin" /> : <span>Process PDF File</span>}
               </button>
@@ -807,12 +817,12 @@ export default function TeacherDashboard() {
 
           {/* PDF Raw questions list */}
           {pdfResultQuestions.length > 0 && (
-            <div className="glass-panel p-6 rounded-2xl border border-indigo-500/20">
+            <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-blue-100">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-indigo-400">Extracted PDF Questions</h3>
+                <h3 className="text-lg font-bold text-blue-600">Extracted PDF Questions</h3>
                 <button
                   onClick={savePdfExtracted}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg cursor-pointer transition"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-slate-800 text-xs font-semibold rounded-lg cursor-pointer transition"
                 >
                   Save Extracted to Catalog
                 </button>
@@ -820,14 +830,14 @@ export default function TeacherDashboard() {
 
               <div className="flex flex-col gap-6">
                 {pdfResultQuestions.map((q, idx) => (
-                  <div key={idx} className="p-4 bg-slate-900/60 rounded-xl border border-slate-850">
-                    <h4 className="font-semibold text-white">
+                  <div key={idx} className="p-4 bg-white rounded-xl border border-slate-850">
+                    <h4 className="font-semibold text-slate-800">
                       {idx + 1}. {q.questionText}
                     </h4>
                     <div className="flex gap-2 my-2">
-                      <span className="px-2 py-0.5 bg-slate-800 text-[10px] rounded text-indigo-400 font-bold">{q.subject}</span>
-                      <span className="px-2 py-0.5 bg-slate-800 text-[10px] rounded text-emerald-400 font-bold">{q.topic}</span>
-                      <span className="px-2 py-0.5 bg-slate-800 text-[10px] rounded text-amber-400 font-bold">{q.difficulty}</span>
+                      <span className="px-2 py-0.5 bg-slate-100 text-[10px] rounded text-blue-600 font-bold">{q.subject}</span>
+                      <span className="px-2 py-0.5 bg-slate-100 text-[10px] rounded text-emerald-600 font-bold">{q.topic}</span>
+                      <span className="px-2 py-0.5 bg-slate-100 text-[10px] rounded text-amber-600 font-bold">{q.difficulty}</span>
                     </div>
                     {q.options && q.options.length > 0 && (
                       <ul className="mt-3 grid grid-cols-2 gap-2 text-xs">
@@ -836,8 +846,8 @@ export default function TeacherDashboard() {
                             key={oi}
                             className={`p-2 rounded border ${
                               oi === Number(q.correctAnswer)
-                                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                                : 'bg-slate-950 border-slate-900'
+                                ? 'bg-emerald-50 border-emerald-500/30 text-emerald-600'
+                                : 'bg-[#f8f9fa] border-slate-200'
                             }`}
                           >
                             Option {oi}: {opt}
@@ -845,7 +855,7 @@ export default function TeacherDashboard() {
                         ))}
                       </ul>
                     )}
-                    <p className="mt-3 text-xs text-slate-400 leading-relaxed bg-indigo-950/20 p-2.5 rounded border border-indigo-500/10">
+                    <p className="mt-3 text-xs text-slate-500 leading-relaxed bg-indigo-950/20 p-2.5 rounded border border-indigo-500/10">
                       <strong>Explanation:</strong> {q.explanation}
                     </p>
                   </div>
@@ -856,16 +866,16 @@ export default function TeacherDashboard() {
 
           {/* PYQ Analysis summary */}
           {pyqAnalysis && (
-            <div className="glass-panel p-6 rounded-2xl border border-indigo-500/20 flex flex-col gap-5">
-              <h3 className="text-lg font-bold text-indigo-400 border-b border-slate-900 pb-2">
+            <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-blue-100 flex flex-col gap-5">
+              <h3 className="text-lg font-bold text-blue-600 border-b border-slate-200 pb-2">
                 PYQ Syllabus Weightage Analysis
               </h3>
 
               <div>
-                <h4 className="text-sm font-semibold text-white mb-2">Repeated Focus Topics</h4>
+                <h4 className="text-sm font-semibold text-slate-800 mb-2">Repeated Focus Topics</h4>
                 <div className="flex flex-wrap gap-2">
                   {pyqAnalysis.repeatedTopics?.map((topic: string, i: number) => (
-                    <span key={i} className="px-2.5 py-1 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold rounded-lg">
+                    <span key={i} className="px-2.5 py-1 bg-blue-50 border border-blue-100 text-blue-600 text-xs font-semibold rounded-lg">
                       {topic}
                     </span>
                   ))}
@@ -873,22 +883,22 @@ export default function TeacherDashboard() {
               </div>
 
               <div>
-                <h4 className="text-sm font-semibold text-white mb-2">Chapter Weightage Distribution</h4>
+                <h4 className="text-sm font-semibold text-slate-800 mb-2">Chapter Weightage Distribution</h4>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {pyqAnalysis.weightageAnalysis?.map((ch: any, i: number) => (
-                    <div key={i} className="p-3 bg-slate-900/60 rounded-xl border border-slate-800 text-center">
+                    <div key={i} className="p-3 bg-white rounded-xl border border-slate-200 text-center">
                       <span className="block text-xs text-slate-500 truncate">{ch.chapter}</span>
-                      <span className="block font-bold text-indigo-400 mt-1">{ch.weightage}%</span>
+                      <span className="block font-bold text-blue-600 mt-1">{ch.weightage}%</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               <div>
-                <h4 className="text-sm font-semibold text-white mb-2">Predicted Examination Questions</h4>
-                <ul className="flex flex-col gap-2.5 text-xs text-slate-400">
+                <h4 className="text-sm font-semibold text-slate-800 mb-2">Predicted Examination Questions</h4>
+                <ul className="flex flex-col gap-2.5 text-xs text-slate-500">
                   {pyqAnalysis.probableQuestions?.map((q: string, i: number) => (
-                    <li key={i} className="p-2.5 bg-slate-900/40 border border-slate-900 rounded-lg">
+                    <li key={i} className="p-2.5 bg-white border border-slate-200 rounded-lg">
                       <strong>Q{i + 1}:</strong> {q}
                     </li>
                   ))}
@@ -901,39 +911,39 @@ export default function TeacherDashboard() {
 
       {/* TAB 5: CREATE TEST SCHEDULE */}
       {activeTab === 'schedule' && (
-        <div className="glass-panel p-6 rounded-2xl border border-slate-900 max-w-3xl">
+        <div className="bg-white shadow-sm border border-slate-200 p-6 rounded-2xl border border-slate-200 max-w-3xl">
           <h2 className="text-xl font-bold mb-6">Create Exam Schedule</h2>
           <form onSubmit={handleScheduleTest} className="flex flex-col gap-5">
             <div>
-              <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Exam Title</label>
+              <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Exam Title</label>
               <input
                 type="text"
                 required
                 value={testTitle}
                 onChange={(e) => setTestTitle(e.target.value)}
                 placeholder="e.g. Operating Systems Final"
-                className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Description</label>
+              <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Description</label>
               <textarea
                 rows={2}
                 value={testDesc}
                 onChange={(e) => setTestDesc(e.target.value)}
                 placeholder="Enter description, rules, etc..."
-                className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
               />
             </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Subject Category</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Subject Category</label>
                 <select
                   value={testSubjectId}
                   onChange={(e) => setTestSubjectId(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                  className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
                 >
                   {subjects.map((sub: any) => (
                     <option key={sub._id} value={sub._id}>
@@ -945,22 +955,22 @@ export default function TeacherDashboard() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Duration (Mins)</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Duration (Mins)</label>
                 <input
                   type="number"
                   required
                   value={testDuration}
                   onChange={(e) => setTestDuration(Number(e.target.value))}
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                  className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Test Type</label>
+                <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Test Type</label>
                 <select
                   value={testType}
                   onChange={(e) => setTestType(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none"
+                  className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none"
                 >
                   <option value="PRACTICE">Practice (Instant feedback)</option>
                   <option value="SCHEDULED">Scheduled (Window bounded)</option>
@@ -972,40 +982,40 @@ export default function TeacherDashboard() {
             {testType === 'SCHEDULED' && (
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Start Date & Time</label>
+                  <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">Start Date & Time</label>
                   <input
                     type="datetime-local"
                     required
                     value={testStartDate}
                     onChange={(e) => setTestStartDate(e.target.value)}
-                    className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-xs"
+                    className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">End Date & Time</label>
+                  <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">End Date & Time</label>
                   <input
                     type="datetime-local"
                     required
                     value={testEndDate}
                     onChange={(e) => setTestEndDate(e.target.value)}
-                    className="w-full px-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500/50 rounded-xl text-white outline-none text-xs"
+                    className="w-full px-4 py-2 bg-white border border-slate-200 shadow-sm border border-slate-200 focus:border-indigo-500/50 rounded-xl text-slate-800 outline-none text-xs"
                   />
                 </div>
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-semibold uppercase text-slate-400 mb-1.5">
+              <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5">
                 Select Questions ({testQuestions.length} Selected)
               </label>
-              <div className="max-h-60 overflow-y-auto border border-slate-900 bg-slate-900/30 rounded-xl p-3 flex flex-col gap-2">
+              <div className="max-h-60 overflow-y-auto border border-slate-200 bg-white rounded-xl p-3 flex flex-col gap-2">
                 {questionsList.map((q: any) => (
                   <label
                     key={q._id}
                     className={`p-2.5 rounded-lg border text-xs flex gap-3 items-center cursor-pointer transition ${
                       testQuestions.includes(q._id)
-                        ? 'bg-indigo-600/10 border-indigo-500/35 text-indigo-400'
-                        : 'bg-slate-900 border-slate-850 text-slate-400 hover:text-white'
+                        ? 'bg-blue-600/10 border-indigo-500/35 text-blue-600'
+                        : 'bg-white border border-slate-200 shadow-sm border-slate-850 text-slate-500 hover:text-slate-800'
                     }`}
                   >
                     <input
@@ -1034,7 +1044,7 @@ export default function TeacherDashboard() {
             <button
               type="submit"
               disabled={testLoading}
-              className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition disabled:opacity-50"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-slate-800 font-semibold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition disabled:opacity-50"
             >
               {testLoading ? <Loader className="w-5 h-5 animate-spin" /> : <span>Schedule Exam</span>}
             </button>

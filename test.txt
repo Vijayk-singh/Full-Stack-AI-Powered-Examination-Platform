@@ -1,0 +1,55 @@
+==========================================
+EduGauge AI - Application Functionality Test Report
+==========================================
+
+[✅ PASSED] Teacher Login - POST /api/auth/login
+   Details: Token obtained: true
+
+[✅ PASSED] Admin Login - POST /api/auth/login
+   Details: Token obtained: true
+
+[✅ PASSED] Student Registration - POST /api/auth/register
+   Details: Registered with email: student_1783060541326@test.com
+
+[✅ PASSED] Student Login - POST /api/auth/login
+   Details: Token obtained: true
+
+[✅ PASSED] Get Subject - GET /api/subjects
+   Details: Subject ID: 6a475462302c636942e481e7
+
+[✅ PASSED] Get Topic - GET /api/topics
+   Details: Topic ID: 6a475462302c636942e481ea
+
+[✅ PASSED] Create Question (Teacher) - POST /api/questions
+   Details: Question ID: 6a47583ed29e0fecbd438e1e
+
+[✅ PASSED] Create Test (Teacher) - POST /api/tests
+   Details: Test ID: 6a47583ed29e0fecbd438e1f
+
+[✅ PASSED] Publish Test (Teacher) - PUT /api/tests/:id/status
+   Details: Test Status: PUBLISHED
+
+[✅ PASSED] Create Subscription Plan (Admin) - POST /api/subscriptions/plans
+   Details: Plan ID: 6a47583ed29e0fecbd438e20
+
+[✅ PASSED] Student Subscribe to Plan - POST /api/subscriptions/user
+   Details: Subscribed successfully
+
+[✅ PASSED] Student View Tests - GET /api/tests
+   Details: Can see newly created test: true
+
+[✅ PASSED] Student Start Attempt - POST /api/attempts
+   Details: Attempt ID: 6a475840d29e0fecbd438e22
+
+[✅ PASSED] Student Submit Attempt - POST /api/attempts/:id
+   Details: Score: 10, Accuracy: 100%
+
+
+==========================================
+Summary of Test Run
+==========================================
+Total Tests: 14
+Passed: 14
+Failed: 0
+
+All core flows completed successfully.

@@ -16,6 +16,8 @@ export interface IQuestion extends Document {
   negativeMarks: number;
   imageUrl?: string;
   tags: string[];
+  timeLimit: number;
+  timer:number
   createdBy: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -43,6 +45,8 @@ const QuestionSchema = new Schema<IQuestion>(
     negativeMarks: { type: Number, required: true, default: 0 },
     imageUrl: { type: String, default: '' },
     tags: [{ type: String }],
+    timeLimit: { type: Number, default: 60 },
+    timer: { type: Number, default: 0 },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
   { timestamps: true }

@@ -148,13 +148,13 @@ export default function StudentDashboard() {
       <div className="flex flex-col gap-8 animate-fade-in">
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-3xl font-extrabold text-white">Choose a Subscription Plan</h1>
-            <p className="text-slate-400 mt-1">Select a plan to start attempting mock tests and reviewing AI analyses.</p>
+            <h1 className="text-3xl font-bold text-slate-800">Choose a Subscription Plan</h1>
+            <p className="text-slate-500 mt-1">Select a plan to start attempting mock tests and reviewing AI analyses.</p>
           </div>
           {activeSub && (
             <button
               onClick={() => setShowPlansSelector(false)}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition cursor-pointer"
+              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition cursor-pointer"
             >
               Back to Dashboard
             </button>
@@ -163,21 +163,21 @@ export default function StudentDashboard() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
           {availablePlans.map((plan: any) => (
-            <div key={plan._id} className="glass-panel p-6 rounded-2xl border border-slate-900 flex flex-col justify-between min-h-[350px]">
+            <div key={plan._id} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between min-h-[350px]">
               <div>
                 <div className="flex justify-between items-start gap-4">
-                  <h3 className="text-xl font-bold text-white leading-tight">{plan.name}</h3>
-                  <span className="px-3 py-1 bg-emerald-500/10 text-emerald-400 font-bold rounded-lg text-sm">
+                  <h3 className="text-xl font-bold text-slate-800 leading-tight">{plan.name}</h3>
+                  <span className="px-3 py-1 bg-emerald-50 text-emerald-600 font-bold rounded-lg text-sm">
                     ${plan.price}
                   </span>
                 </div>
                 
-                <p className="text-xs text-slate-400 mt-2 leading-relaxed">{plan.description || 'Access a selection of exams with customized attempt policies.'}</p>
+                <p className="text-xs text-slate-500 mt-2 leading-relaxed">{plan.description || 'Access a selection of exams with customized attempt policies.'}</p>
                 
-                <div className="my-6 border-t border-slate-900 pt-4 flex flex-col gap-3 text-xs text-slate-500">
+                <div className="my-6 border-t border-slate-100 pt-4 flex flex-col gap-3 text-xs text-slate-500">
                   <div className="flex justify-between">
                     <span>Duration:</span>
-                    <span className="font-semibold text-slate-300">
+                    <span className="font-medium text-slate-700">
                       {plan.expiryDate 
                         ? `Valid until ${new Date(plan.expiryDate).toLocaleDateString()}`
                         : `${plan.durationDays} Days`
@@ -186,11 +186,11 @@ export default function StudentDashboard() {
                   </div>
                   <div className="flex justify-between">
                     <span>Attempts Per Test:</span>
-                    <span className="font-semibold text-slate-300">{plan.attemptsPerTest}</span>
+                    <span className="font-medium text-slate-700">{plan.attemptsPerTest}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Included Tests:</span>
-                    <span className="font-semibold text-slate-300">{plan.availableTests?.length || 0} tests</span>
+                    <span className="font-medium text-slate-700">{plan.availableTests?.length || 0} tests</span>
                   </div>
                 </div>
               </div>
@@ -198,7 +198,7 @@ export default function StudentDashboard() {
               <button
                 onClick={() => handleSubscribe(plan._id)}
                 disabled={subscribingId !== null}
-                className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-semibold rounded-xl text-xs flex items-center justify-center gap-2 transition cursor-pointer mt-4"
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium rounded-xl text-xs flex items-center justify-center gap-2 transition cursor-pointer mt-4"
               >
                 {subscribingId === plan._id ? (
                   <Loader className="w-4 h-4 animate-spin" />
@@ -225,40 +225,40 @@ export default function StudentDashboard() {
     <div className="flex flex-col gap-8 animate-fade-in">
       {/* Title */}
       <div>
-        <h1 className="text-3xl font-extrabold text-white">Student Dashboard</h1>
-        <p className="text-slate-400 mt-1">Review your statistics and attempt pending exams.</p>
+        <h1 className="text-3xl font-bold text-slate-800">Student Dashboard</h1>
+        <p className="text-slate-500 mt-1">Review your statistics and attempt pending exams.</p>
       </div>
 
       {/* Active Subscription Status Bar */}
-      <div className="glass-panel p-4 rounded-xl border border-slate-900 bg-slate-900/40 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+          <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
             <CreditCard className="w-5 h-5" />
           </div>
           <div>
             <div className="text-xs text-slate-500 uppercase font-bold tracking-wider">Active Subscription</div>
-            <h4 className="text-sm font-bold text-white mt-0.5">
-              {activePlan?.name} <span className="text-xs text-slate-400 font-normal">(${activePlan?.price})</span>
+            <h4 className="text-sm font-bold text-slate-800 mt-0.5">
+              {activePlan?.name} <span className="text-xs text-slate-500 font-normal">(${activePlan?.price})</span>
             </h4>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 sm:gap-8 text-xs text-slate-400">
+        <div className="flex flex-wrap items-center gap-4 sm:gap-8 text-xs text-slate-500">
           <div>
             <span className="text-slate-500">Validity:</span>{' '}
-            <span className="font-semibold text-slate-300">
+            <span className="font-medium text-slate-700">
               {new Date(activeSub.endDate).toLocaleDateString()}
             </span>
           </div>
           <div>
             <span className="text-slate-500">Limit:</span>{' '}
-            <span className="font-semibold text-slate-300">
+            <span className="font-medium text-slate-700">
               {activePlan?.attemptsPerTest} attempts/test
             </span>
           </div>
           <button
             onClick={() => setShowPlansSelector(true)}
-            className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold rounded-lg transition cursor-pointer"
+            className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition cursor-pointer"
           >
             Change Plan
           </button>
@@ -267,33 +267,33 @@ export default function StudentDashboard() {
 
       {/* Stats row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="glass-panel p-6 rounded-2xl flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
             <Award className="w-6 h-6" />
           </div>
           <div>
             <span className="text-xs text-slate-500 uppercase font-bold tracking-wider">Average Score</span>
-            <h3 className="text-2xl font-bold text-white mt-0.5">{stats.avgScore} pts</h3>
+            <h3 className="text-2xl font-bold text-slate-800 mt-0.5">{stats.avgScore} pts</h3>
           </div>
         </div>
 
-        <div className="glass-panel p-6 rounded-2xl flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
             <Activity className="w-6 h-6" />
           </div>
           <div>
             <span className="text-xs text-slate-500 uppercase font-bold tracking-wider">Overall Accuracy</span>
-            <h3 className="text-2xl font-bold text-white mt-0.5">{stats.avgAccuracy}%</h3>
+            <h3 className="text-2xl font-bold text-slate-800 mt-0.5">{stats.avgAccuracy}%</h3>
           </div>
         </div>
 
-        <div className="glass-panel p-6 rounded-2xl flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600">
             <CheckCircle2 className="w-6 h-6" />
           </div>
           <div>
             <span className="text-xs text-slate-500 uppercase font-bold tracking-wider">Completed Tests</span>
-            <h3 className="text-2xl font-bold text-white mt-0.5">{stats.totalCompleted} tests</h3>
+            <h3 className="text-2xl font-bold text-slate-800 mt-0.5">{stats.totalCompleted} tests</h3>
           </div>
         </div>
       </div>
@@ -302,9 +302,9 @@ export default function StudentDashboard() {
         {/* Left Side: Test list and Attempt history */}
         <div className="lg:col-span-2 flex flex-col gap-8">
           {/* Available Tests */}
-          <div className="glass-panel p-6 rounded-2xl border border-slate-900">
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-indigo-400" />
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-slate-800">
+              <BookOpen className="w-5 h-5 text-blue-600" />
               Available Tests
             </h2>
 
@@ -323,19 +323,19 @@ export default function StudentDashboard() {
                   return (
                     <div
                       key={test._id}
-                      className="p-4 bg-slate-900/60 rounded-xl border border-slate-800/80 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-slate-700/80 transition"
+                      className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-blue-200 transition"
                     >
                       <div>
-                        <h4 className="font-semibold text-white">{test.title}</h4>
-                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-xs text-slate-400">
-                          <span className="px-2 py-0.5 bg-slate-800 rounded font-semibold text-indigo-400">
+                        <h4 className="font-semibold text-slate-800">{test.title}</h4>
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-xs text-slate-500">
+                          <span className="px-2 py-0.5 bg-blue-50 border border-blue-100 rounded font-semibold text-blue-700">
                             {test.subjectId?.name || 'General'}
                           </span>
                           <span className="flex items-center gap-1">
                             <Clock className="w-3.5 h-3.5" /> {test.duration} mins
                           </span>
                           <span>Marks: {test.totalMarks}</span>
-                          <span className={`font-semibold ${isExhausted ? 'text-rose-400' : 'text-emerald-400'}`}>
+                          <span className={`font-semibold ${isExhausted ? 'text-red-500' : 'text-emerald-600'}`}>
                             Attempts Remaining: {attemptsRemaining} / {maxAttempts}
                           </span>
                         </div>
@@ -346,8 +346,8 @@ export default function StudentDashboard() {
                         disabled={isExhausted}
                         className={`w-full sm:w-auto px-4 py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-2 transition cursor-pointer ${
                           isExhausted 
-                            ? 'bg-slate-800 text-slate-500 cursor-not-allowed border-none'
-                            : 'bg-indigo-600 hover:bg-indigo-500 text-white'
+                            ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-none'
+                            : 'bg-blue-600 hover:bg-blue-700 text-white'
                         }`}
                       >
                         {isExhausted ? (
@@ -366,9 +366,9 @@ export default function StudentDashboard() {
           </div>
 
           {/* Test History */}
-          <div className="glass-panel p-6 rounded-2xl border border-slate-900">
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <Activity className="w-5 h-5 text-indigo-400" />
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-slate-800">
+              <Activity className="w-5 h-5 text-emerald-600" />
               Recent Attempts
             </h2>
 
@@ -381,12 +381,12 @@ export default function StudentDashboard() {
                 {attempts.map((attempt: any) => (
                   <div
                     key={attempt._id}
-                    className="p-4 bg-slate-900/60 rounded-xl border border-slate-800/80 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+                    className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-slate-300 transition"
                   >
                     <div>
-                      <h4 className="font-semibold text-white">{attempt.testId?.title || 'Practice Test'}</h4>
-                      <div className="flex items-center gap-4 mt-1 text-xs text-slate-400">
-                        <span className="px-2 py-0.5 bg-slate-800 rounded font-semibold text-emerald-400">
+                      <h4 className="font-semibold text-slate-800">{attempt.testId?.title || 'Practice Test'}</h4>
+                      <div className="flex items-center gap-4 mt-1 text-xs text-slate-500">
+                        <span className="px-2 py-0.5 bg-emerald-50 border border-emerald-100 rounded font-semibold text-emerald-700">
                           {attempt.testId?.subjectId?.name || 'General'}
                         </span>
                         <span>Time: {Math.round(attempt.completionTime / 60)}m {attempt.completionTime % 60}s</span>
@@ -395,10 +395,10 @@ export default function StudentDashboard() {
                     </div>
 
                     <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
-                      <span className="font-bold text-white">{attempt.score} pts</span>
+                      <span className="font-bold text-slate-800">{attempt.score} pts</span>
                       <button
                         onClick={() => router.push(`/test/${attempt.testId?._id}/result/${attempt._id}`)}
-                        className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-semibold rounded-lg flex items-center gap-2 transition cursor-pointer"
+                        className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg flex items-center gap-2 transition cursor-pointer"
                       >
                         View Analysis <ArrowRight className="w-3.5 h-3.5" />
                       </button>
@@ -412,30 +412,30 @@ export default function StudentDashboard() {
 
         {/* Right Side: Weakness analysis list */}
         <div className="flex flex-col gap-6">
-          <div className="glass-panel p-6 rounded-2xl border border-slate-900">
-            <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-amber-400">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-amber-600">
               <AlertTriangle className="w-5 h-5" />
               Focus Areas
             </h3>
-            <p className="text-xs text-slate-400 mb-4">
+            <p className="text-xs text-slate-500 mb-4">
               AI has identified these concepts based on recent incorrect responses:
             </p>
 
             <div className="flex flex-wrap gap-2">
-              <span className="px-2.5 py-1 bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold rounded-lg">
+              <span className="px-2.5 py-1 bg-red-50 border border-red-100 text-red-600 text-xs font-semibold rounded-lg">
                 Concurrency Control
               </span>
-              <span className="px-2.5 py-1 bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold rounded-lg">
+              <span className="px-2.5 py-1 bg-red-50 border border-red-100 text-red-600 text-xs font-semibold rounded-lg">
                 CPU Registers
               </span>
-              <span className="px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold rounded-lg">
+              <span className="px-2.5 py-1 bg-amber-50 border border-amber-100 text-amber-600 text-xs font-semibold rounded-lg">
                 TCP Three-Way Handshake
               </span>
             </div>
 
-            <div className="mt-6 pt-6 border-t border-slate-900">
-              <h4 className="text-sm font-semibold text-white mb-2">Revision Plan Suggested:</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
+            <div className="mt-6 pt-6 border-t border-slate-100">
+              <h4 className="text-sm font-semibold text-slate-800 mb-2">Revision Plan Suggested:</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
                 Review the Operating Systems lecture notes on Concurrency, then attempt a 5-question Easy practice quiz.
               </p>
             </div>

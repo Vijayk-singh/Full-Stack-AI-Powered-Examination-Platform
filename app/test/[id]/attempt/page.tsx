@@ -45,6 +45,7 @@ export default function AttemptPage({
 
   // TCS iON status tracker for each question ID
   const [qStatuses, setQStatuses] = useState<Record<string, QuestionStatus>>({});
+  const [qTimeLeft, setQTimeLeft] = useState<Record<string, number>>({});
 
   // 1. Fetch Exam questions
   useEffect(() => {
@@ -60,12 +61,15 @@ export default function AttemptPage({
 
         startExam(attemptId, testId, data.data.title, data.data.questions || [], data.data.duration);
         
-        // Initialize statuses
+        // Initialize statuses and question timers
         const initialStatuses: Record<string, QuestionStatus> = {};
+        const initialTimeLeft: Record<string, number> = {};
         data.data.questions?.forEach((q: any, idx: number) => {
           initialStatuses[q._id] = idx === 0 ? 'not_answered' : 'not_visited';
+          initialTimeLeft[q._id] = q.timeLimit || 60;
         });
         setQStatuses(initialStatuses);
+        setQTimeLeft(initialTimeLeft);
 
         setLoading(false);
       } catch (err: any) {
@@ -87,6 +91,62 @@ export default function AttemptPage({
 
     return () => clearInterval(interval);
   }, [isExamActive, timeLeft, tickTime]);
+
+  // 2a. Question Timer tick
+  useEffect(() => {
+    if (!isExamActive || timeLeft <= 0 || questions.length === 0) return;
+    const activeQuestionId = questions[activeQIndex]?._id;
+    if (!activeQuestionId || qTimeLeft[activeQuestionId] <= 0) return;
+
+    const interval = setInterval(() => {
+      setQTimeLeft((prev) => {
+         const current = prev[activeQuestionId];
+         if (current <= 1) {
+            return { ...prev, [activeQuestionId]: 0 };
+         }
+         return { ...prev, [activeQuestionId]: current - 1 };
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isExamActive, timeLeft, activeQIndex, questions, qTimeLeft]);
+
+  // 2b. Auto-advance when question timer hits 0
+  useEffect(() => {
+    if (!isExamActive || questions.length === 0) return;
+    const activeQuestionId = questions[activeQIndex]?._id;
+    if (activeQuestionId && qTimeLeft[activeQuestionId] === 0) {
+      if (activeQIndex < questions.length - 1) {
+        // Find next question with time > 0
+        let nextIdx = activeQIndex + 1;
+        while (nextIdx < questions.length && qTimeLeft[questions[nextIdx]._id] <= 0) {
+          nextIdx++;
+        }
+        if (nextIdx < questions.length) {
+          // manually simulate palette click to navigate safely
+          const currentQId = questions[activeQIndex]._id;
+          const currentAns = answers.find((ans) => ans.questionId === currentQId)?.answer;
+          const isCurrentAnswered = currentAns !== undefined && currentAns !== null && currentAns !== '';
+          setQStatuses((prev) => {
+            const currStatus = prev[currentQId];
+            if (currStatus !== 'marked_for_review' && currStatus !== 'answered_and_marked_for_review') {
+              return { ...prev, [currentQId]: isCurrentAnswered ? 'answered' : 'not_answered' };
+            }
+            return prev;
+          });
+          const nextQId = questions[nextIdx]._id;
+          setQStatuses((prev) => ({
+            ...prev,
+            [nextQId]: prev[nextQId] === 'not_visited' ? 'not_answered' : prev[nextQId],
+          }));
+          setActiveQIndex(nextIdx);
+        } else {
+          submitExamSheet();
+        }
+      } else {
+        submitExamSheet();
+      }
+    }
+  }, [qTimeLeft, activeQIndex, questions, isExamActive]);
 
   // 3. Trigger auto-submit when timer hits 0
   useEffect(() => {
@@ -242,6 +302,12 @@ export default function AttemptPage({
   };
 
   const handlePaletteClick = (idx: number) => {
+    const targetQId = questions[idx]._id;
+    if (qTimeLeft[targetQId] !== undefined && qTimeLeft[targetQId] <= 0) {
+      alert("Time has expired for this question. You cannot revisit it.");
+      return;
+    }
+
     const currentQId = questions[activeQIndex]._id;
     const isCurrentAnswered = currentAnswer !== undefined && currentAnswer !== null && currentAnswer !== '';
     
@@ -301,8 +367,17 @@ export default function AttemptPage({
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 px-3 py-1 bg-[#2c3e50] rounded border border-slate-700">
+            <Clock className="w-4 h-4 text-amber-400" />
+            <span className="text-xs text-slate-400">Question Time:</span>
+            <span className="font-mono font-bold text-sm text-white">
+              {activeQuestion && qTimeLeft[activeQuestion._id] !== undefined 
+                ? formatTime(qTimeLeft[activeQuestion._id]) 
+                : '00:00:00'}
+            </span>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1 bg-[#2c3e50] rounded border border-slate-700">
             <Clock className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs text-slate-400">Time Left:</span>
+            <span className="text-xs text-slate-400">Total Time Left:</span>
             <span className="font-mono font-bold text-sm text-white">{formatTime(timeLeft)}</span>
           </div>
         </div>
@@ -347,10 +422,11 @@ export default function AttemptPage({
                 <div className="text-slate-800 text-sm font-medium leading-relaxed bg-[#f8f9fa] p-4 rounded border border-slate-200">
                   {activeQuestion.questionText}
                 </div>
-                 // add question img here from imgUrl
+                 {activeQuestion.imageUrl && (
                   <div className="text-slate-800 text-sm font-medium leading-relaxed bg-[#f8f9fa] p-4 rounded border border-slate-200">
-                  {activeQuestion.imageUrl}
-                </div>
+                    <img src={activeQuestion.imageUrl} alt="Question Image" className="max-w-full h-auto" />
+                  </div>
+                 )}
                 {/* Answer Input Areas */}
                 <div className="flex flex-col gap-3 max-w-2xl">
                   {(activeQuestion.type === 'MCQ' || activeQuestion.type === 'TRUE_FALSE') && (

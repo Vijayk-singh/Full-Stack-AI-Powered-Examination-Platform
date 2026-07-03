@@ -20,29 +20,29 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen bg-slate-950 text-slate-100 font-sans">
+    <div className="flex-1 flex flex-col min-h-screen bg-[#f8f9fa] text-slate-800 font-sans">
       {/* Header bar */}
-      <header className="sticky top-0 z-30 w-full border-b border-slate-900 bg-slate-950/70 backdrop-blur-md">
+      <header className="sticky top-0 z-30 w-full bg-white border-b border-slate-200 shadow-sm">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-lg text-white shadow-lg">
+          <Link href="/dashboard" className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded bg-blue-600 flex items-center justify-center font-bold text-lg text-white">
               E
             </div>
-            <span className="font-bold text-xl tracking-tight text-white">
-              EduGauge <span className="text-indigo-400">AI</span>
+            <span className="font-semibold text-xl tracking-tight text-slate-700">
+              EduGauge
             </span>
           </Link>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             {user && (
-              <Link href="/dashboard/profile" className="flex items-center gap-3 hover:opacity-80 transition cursor-pointer">
-                <div className="hidden sm:flex flex-col text-right font-sans">
-                  <span className="text-sm font-semibold text-white">{user.name}</span>
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-indigo-400">
+              <Link href="/dashboard/profile" className="flex items-center gap-3 hover:bg-slate-50 p-1.5 rounded-full transition cursor-pointer">
+                <div className="hidden sm:flex flex-col text-right font-sans mr-1">
+                  <span className="text-sm font-medium text-slate-700">{user.name}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500">
                     {user.role}
                   </span>
                 </div>
-                <div className="w-9 h-9 rounded-full bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold">
+                <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-semibold border border-blue-200">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
               </Link>
@@ -50,15 +50,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
             <Link
               href="/dashboard/profile"
-              className="p-2 text-slate-400 hover:text-white hover:bg-slate-900 rounded-lg transition cursor-pointer"
+              className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition cursor-pointer"
               title="Profile Settings"
             >
-              <User className="w-5 h-5" />
+              <Settings className="w-5 h-5" />
             </Link>
 
             <button
               onClick={handleLogout}
-              className="p-2 text-slate-400 hover:text-white hover:bg-slate-900 rounded-lg transition cursor-pointer"
+              className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-full transition cursor-pointer"
               title="Logout"
             >
               <LogOut className="w-5 h-5" />

@@ -6,6 +6,8 @@ export type UserStatus = 'active' | 'pending' | 'inactive';
 export interface IUser extends Document {
   name: string;
   email: string;
+  isactive: boolean;
+  isVerified: boolean;
   password?: string;
   role: UserRole;
   avatar?: string;
@@ -18,6 +20,8 @@ const UserSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    isactive: { type: Boolean, default: true },
+    isVerified: { type: Boolean, default: false },
     password: { type: String, required: false }, // optional for OAuth or custom integrations if needed, but required for custom auth
     role: { type: String, enum: ['STUDENT', 'TEACHER', 'ADMIN'], default: 'STUDENT' },
     avatar: { type: String, default: '' },

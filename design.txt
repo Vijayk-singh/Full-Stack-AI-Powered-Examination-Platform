@@ -1,0 +1,207 @@
+====================================================================
+EDUGAUGE AI - COMPREHENSIVE SYSTEM ARCHITECTURE & DESIGN DOCUMENT
+====================================================================
+
+Welcome to the EduGauge AI design document. The purpose of this document is not just to provide a high-level overview, but to deeply explain the "Why" and "How" of every piece of the codebase. By the time you finish reading this, you will have the knowledge to rebuild this platform from scratch, modify any component confidently, and understand the precise architecture that powers it.
+
+====================================================================
+1. CORE PHILOSOPHY & INTRODUCTION
+====================================================================
+EduGauge AI is a Next.js full-stack enterprise-grade online testing and assessment engine. Its primary goal is to facilitate seamless examination processes with intelligent AI features like automated question generation, PDF parsing, smart grading, and detailed performance analysis.
+
+Design Goals:
+- Separation of Concerns: The backend strictly adheres to an N-Tier (Layered) architecture. We do not mix database queries with route handlers. 
+- Scalability: Using Repositories and Services allows swapping out the underlying database without rewriting business logic.
+- Intelligent: AI is treated as a core service (`AIService.ts`) rather than an afterthought, injecting intelligence into question creation and student analytics.
+- State Resilience: Client state for ongoing exams must be robust to prevent data loss during network interruptions.
+
+====================================================================
+2. TECHNOLOGY STACK
+====================================================================
+- Framework: Next.js 16 (App Router)
+- Language: TypeScript (Strict typing for models, requests, and state)
+- Database: MongoDB (via Mongoose ODM)
+- State Management: Zustand (Lightweight, unopinionated, perfect for exam session state)
+- Data Fetching: React Query / TanStack Query (For caching, re-fetching, and synchronizing server state)
+- Styling: Tailwind CSS (Utility-first CSS)
+- AI Integration: Google Gemini / OpenAI (via custom AIService)
+- PDF Parsing: pdf-parse (Extracting text from uploaded PYQs/notes)
+- Icons & Charts: Lucide React & Recharts
+
+====================================================================
+3. ARCHITECTURAL PATTERN (N-TIER BACKEND)
+====================================================================
+Even though this is a Next.js application where frontend and backend coexist, the backend code (`app/api`, `controllers`, `services`, `repositories`, `models`) strictly follows a 4-Layer Architecture:
+
+1. Models (Data Layer): Mongoose Schemas defining the shape of data in MongoDB.
+2. Repositories (Data Access Layer): The ONLY place where Mongoose `model.find()`, `model.create()`, etc. are called.
+3. Services (Business Logic Layer): Applies business rules (e.g., checking if a student has attempts left, grading logic).
+4. Controllers (Presentation Layer for API): Validates incoming HTTP requests, verifies authentication, calls the Service layer, and formats the response.
+5. API Routes (Next.js App Router Layer): Simple wrappers that capture NextRequest and pass it to Controllers.
+
+WHY this pattern? 
+If Next.js API syntax changes, or if we move to Express/NestJS, we only change the `app/api` wrappers. The Controllers, Services, and Repositories remain untouched.
+
+====================================================================
+4. DIRECTORY STRUCTURE
+====================================================================
+/app
+  /api             -> Next.js Route Handlers (Wraps Controllers)
+  /dashboard       -> User dashboard pages (Teacher/Student/Admin)
+  /login           -> Login Page
+  /register        -> Registration Page
+  /test            -> Exam taking interface
+  layout.tsx       -> Root layout (Injects Theme, QueryProvider, AuthHydrator)
+  page.tsx         -> Marketing/Landing Page
+/components
+  AdminDashboard.tsx   -> Admin specific views
+  TeacherDashboard.tsx -> Teacher specific views
+  StudentDashboard.tsx -> Student specific views
+  DashboardLayout.tsx  -> Sidebar/Navbar shell
+  QueryProvider.tsx    -> React Query wrapper
+  AuthHydrator.tsx     -> Restores Zustand auth state from localStorage on load
+/controllers       -> Translates HTTP reqs -> Service calls -> standard responses
+/lib
+  db.ts            -> MongoDB connection logic (cached for serverless environments)
+  /store           -> Zustand stores (auth.ts, exam.ts)
+/models            -> Mongoose schemas
+/repositories      -> DB abstraction functions
+/services          -> Core business logic (Auth, Test, Attempt, AI)
+/utils             -> Helpers (auth.ts for JWT, response.ts for formatting)
+/validators        -> Input validation
+
+====================================================================
+5. DATABASE SCHEMA & MODELS (/models)
+====================================================================
+Every model represents a MongoDB collection.
+
+1. User.ts:
+   - Roles: 'STUDENT', 'TEACHER', 'ADMIN'.
+   - Why: Centralized authentication. Passwords are encrypted (bcrypt).
+
+2. Subject.ts & Topic.ts:
+   - Hierarchical structure. A Subject has many Topics. 
+   - Why: Needed to categorize questions for AI generation and granular student performance analytics.
+
+3. Question.ts:
+   - Types: MCQ, MULTIPLE_CORRECT, TRUE_FALSE, NUMERICAL, SUBJECTIVE.
+   - Contains `correctAnswer`, `marks`, `negativeMarks`, `explanation`, and `difficulty`.
+   - Why: Supports diverse exam formats. The flexible `correctAnswer` (Mixed type) accommodates arrays for multi-correct or strings for numerical boundaries.
+
+4. Test.ts:
+   - Contains an array of Question IDs, `duration`, `totalMarks`, `status` (DRAFT/PUBLISHED).
+   - Why: Represents an exam paper. Separating Questions from Test allows question reusability across multiple tests.
+
+5. Attempt.ts:
+   - Logs a student's attempt for a Test. 
+   - Stores `answers` (what they picked), `score`, `accuracy`, and `completionTime`.
+   - Why: Crucial for proctoring and grading. Incomplete attempts are saved so students can resume if their connection drops.
+
+6. AIReport.ts:
+   - Generated post-attempt. Stores AI-derived `strengths`, `weaknesses`, `speedAccuracyAnalysis`, and `recommendations`.
+   - Why: Pre-calculating and storing this prevents massive AI API costs and latency on every dashboard load.
+
+7. SubscriptionPlan.ts & UserSubscription.ts:
+   - Monetization and access control mapping.
+
+====================================================================
+6. REPOSITORIES (DATA ACCESS) (/repositories)
+====================================================================
+Why do we have this layer?
+Instead of writing `TestModel.findById(id)` inside our logic, we write `testRepository.findById(id)`. This isolates Mongoose logic. If we need to populate specific fields, the repository handles it.
+
+Key Repositories:
+- AttemptRepository.ts: Has specialized methods like `getStudentStats` (aggregates scores across attempts) and `getLeaderboard`.
+- QuestionRepository.ts: Handles bulk fetching by IDs for calculating total marks.
+
+====================================================================
+7. SERVICES (BUSINESS LOGIC) (/services)
+====================================================================
+The brain of the application.
+
+1. AttemptService.ts:
+   - `startAttempt`: Verifies test status, checks subscription access, checks max attempts limit, and creates a blank Attempt in DB.
+   - `evaluateAnswer`: Contains the switch-case logic for grading MCQ vs Numerical vs True/False.
+   - `submitAttempt`: Iterates through submitted answers, grades them, calculates accuracy, and triggers background AI report generation.
+
+2. AIService.ts:
+   - Supports Gemini & OpenAI.
+   - `generateTestQuestions`: Takes Subject/Topic/Difficulty and outputs JSON strictly formatted as our `IQuestion` interface.
+   - `parsePdfAndExtractQuestions`: Uses `pdf-parse` to read a buffer, feeds truncated text to the LLM, and forces the LLM to output structured questions.
+   - `generateStudentReport`: Aggregates the Attempt's data (finding strong/weak topics mathematically) and uses AI to generate personalized revision plans.
+
+3. TestService.ts:
+   - Calculates `totalMarks` automatically by summing up the marks of the attached Question IDs before saving.
+
+====================================================================
+8. CONTROLLERS (/controllers)
+====================================================================
+Controllers sit between the Next.js API Routes and Services.
+Why: Next.js API routes inject specific request types. Controllers abstract this, parsing JSON and authenticating headers.
+
+Example Workflow (TestController.create):
+1. Calls `verifyAuth(req, ['TEACHER'])` -> Ensure user is a Teacher.
+2. Extracts JSON body.
+3. Calls `validateTest(body)`.
+4. Calls `testService.createTest()`.
+5. Returns `successResponse(...)`.
+
+====================================================================
+9. API ROUTES (/app/api)
+====================================================================
+These files (`route.ts`) are extremely thin.
+Example `/app/api/tests/route.ts`:
+```typescript
+export async function POST(req: Request) {
+  return testController.create(req);
+}
+```
+Why: Keeps Next.js specific logic decoupled from application logic.
+
+====================================================================
+10. FRONT-END ARCHITECTURE
+====================================================================
+State Management (Zustand):
+- `auth.ts`: Holds `user` and `accessToken`. Uses `localStorage` to persist sessions across reloads. 
+- `exam.ts`: Holds the active exam state (`timeLeft`, `answers`, `tabSwitches`). 
+  - Why Zustand? During an exam, we need rapid state updates (timer ticking every second, logging radio button clicks) without causing massive re-renders across the whole app. Zustand's targeted subscriptions are perfect here.
+
+Components:
+- `AuthHydrator.tsx`: Runs on initial load. Pulls token from localStorage and hydrates Zustand. Without this, the UI would flicker from logged-out to logged-in on refresh.
+- `QueryProvider.tsx`: Wraps the app in TanStack Query for caching API calls (like fetching leaderboards or user lists).
+- Dashboards (`AdminDashboard.tsx`, etc.): Role-based dynamic components loaded on `/dashboard` based on `user.role`.
+
+====================================================================
+11. AI INTEGRATION DETAILS
+====================================================================
+The `AIService` relies heavily on "Structured Prompting".
+Because we need the AI's output to directly insert into our MongoDB, the prompts contain explicit TypeScript interfaces and instruct the AI: "Return the response strictly in JSON format... Do not output any markdown formatting".
+The code then strips out any backticks and parses the JSON. 
+If the API fails or no key is provided, the service elegantly falls back to `getMockQuestions()`, ensuring the app never crashes during development.
+
+====================================================================
+12. SECURITY & PROCTORING
+====================================================================
+Authentication:
+- Uses JWT (JSON Web Tokens). 
+- `utils/auth.ts` exports `verifyAuth(req, allowedRoles)` which decrypts the Authorization header, checks role permissions, and throws standard HTTP errors if unauthorized.
+
+Proctoring (Front-end):
+- Handled via event listeners in the exam taking component (`/app/test/[id]`).
+- Listens to `visibilitychange` (tab switching), `blur` (clicking out of the window).
+- These increment the `tabSwitches` variable in the `exam.ts` Zustand store, which warns the student and eventually auto-submits if thresholds are crossed.
+
+====================================================================
+13. HOW TO ADD A NEW FEATURE (Step-by-step)
+====================================================================
+Let's say you want to add "Leaderboard Badges".
+1. Model Update: Go to `models/User.ts`, add a `badges: [String]` field.
+2. Repository: Go to `UserRepository.ts` (or AttemptRepo), write a function `awardBadge(userId, badge)`.
+3. Service: In `AttemptService.ts` inside `submitAttempt`, add logic: if `score > 90`, call `userRepository.awardBadge(userId, 'Gold')`.
+4. Controller/API: No changes needed if it's passive, or add a `GET /api/users/badges` if needed.
+5. Frontend: Update `lib/store/auth.ts` `User` interface to include `badges`. Update `StudentDashboard.tsx` to render the badge icons.
+
+====================================================================
+14. FINAL WORDS
+====================================================================
+EduGauge AI is designed to be deeply modular. The strict boundaries between Database, Logic, and HTTP layers mean you can confidently test and expand the application. The integration of Next.js, Zustand, and MongoDB creates a fast, reactive, and robust platform ready for modern educational demands.

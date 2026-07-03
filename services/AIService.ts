@@ -3,8 +3,7 @@ import { attemptRepository } from '../repositories/AttemptRepository';
 import { aiReportRepository } from '../repositories/AIReportRepository';
 import { testRepository } from '../repositories/TestRepository';
 import { connectToDatabase } from '../lib/db';
-import * as pdf from 'pdf-parse';
-const pdfParse = (pdf as any).default || pdf;
+import { PDFParse } from 'pdf-parse';
 
 export class AIService {
   private getApiKey(): { type: 'gemini' | 'openai' | 'none'; key: string } {
@@ -148,9 +147,10 @@ export class AIService {
     let pdfText = '';
     let numPages = 1;
     try {
-      const data = await pdfParse(fileBuffer);
+      const parser = new PDFParse({ data: fileBuffer });
+      const data = await parser.getText();
       pdfText = data.text;
-      numPages = data.numpages;
+      numPages = data.total;
     } catch (err) {
       console.error('Error parsing PDF file:', err);
       throw new Error('Failed to read PDF file format');
@@ -222,7 +222,8 @@ export class AIService {
   async analyzePYQWeightage(fileBuffer: Buffer): Promise<any> {
     let pdfText = '';
     try {
-      const data = await pdfParse(fileBuffer);
+      const parser = new PDFParse({ data: fileBuffer });
+      const data = await parser.getText();
       pdfText = data.text;
     } catch (err) {
       console.error('Error parsing PDF for PYQ Analysis:', err);
