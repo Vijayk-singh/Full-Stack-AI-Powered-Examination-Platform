@@ -9,7 +9,7 @@ export default function Home() {
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-lg text-white shadow-lg shadow-indigo-500/30">
-              SolveKar
+              S
             </div>
             <span className="font-bold text-xl tracking-tight text-white">Solvekar <span className="text-indigo-400">AI</span></span>
           </div>
