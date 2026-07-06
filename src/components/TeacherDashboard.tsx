@@ -6,9 +6,10 @@ import ManualQuestionTab from './TeacherDashboard/ManualQuestionTab';
 import AIGenerationTab from './TeacherDashboard/AIGenerationTab';
 import PDFExtractionTab from './TeacherDashboard/PDFExtractionTab';
 import ScheduleExamTab from './TeacherDashboard/ScheduleExamTab';
+import ManageOATab from './TeacherDashboard/ManageOATab';
 
 export default function TeacherDashboard() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'manual' | 'ai' | 'pdf' | 'schedule'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'manual' | 'ai' | 'pdf' | 'schedule' | 'oa'>('overview');
 
   return (
     <div className="flex flex-col gap-8 animate-fade-in">
@@ -60,6 +61,14 @@ export default function TeacherDashboard() {
         >
           Schedule Test
         </button>
+        <button
+          onClick={() => setActiveTab('oa')}
+          className={`px-4 py-2.5 font-semibold text-sm transition cursor-pointer border-b-2 whitespace-nowrap ${
+            activeTab === 'oa' ? 'border-indigo-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          Online Assessments (OA)
+        </button>
       </div>
 
       {/* Tab Content */}
@@ -68,6 +77,7 @@ export default function TeacherDashboard() {
       {activeTab === 'ai' && <AIGenerationTab />}
       {activeTab === 'pdf' && <PDFExtractionTab />}
       {activeTab === 'schedule' && <ScheduleExamTab onSuccess={() => setActiveTab('overview')} />}
+      {activeTab === 'oa' && <ManageOATab />}
     </div>
   );
 }
